@@ -58,9 +58,9 @@ struct TemporaryMemory
 
 	const ML::cumlHandle_impl& ml_handle;
 
-           TemporaryMemory(const ML::cumlHandle_impl& handle, int N, int Ncols, int maxstr, int n_unique, int n_bins, const int split_algo):ml_handle(handle){};
+           TemporaryMemory(const ML::cumlHandle_impl& handle, int N, int Ncols, int maxstr, int n_unique, int n_bins, const int split_algo):ml_handle(handle){}
 
 	void print_info();
-	~TemporaryMemory(){};
+	~TemporaryMemory(){}
 
 };
