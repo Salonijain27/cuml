@@ -19,6 +19,12 @@
 #include <test_utils.h>
 #include "ml_utils.h"
 #include "randomforest/randomforest.h"
+#include <stdio.h>
+#include <iostream>
+#include <array>
+#include <map>
+#include <string>
+#include <fstream>
 
 namespace ML {
 
@@ -46,18 +52,29 @@ template<typename T>
 	return os;
 }
 
+void print(std::vector<int> const &input)
+{
+	for (int i = 0; i < input.size(); i++) {
+		std::cout << input.at(i) << ' ';
+	}
+}
 
 template<typename T>
 class RfTest: public ::testing::TestWithParam<RfInputs<T> > {
 protected:
 	void basicTest() {
 
+		printf(" Start basic tests \n");
 		params = ::testing::TestWithParam<RfInputs<T>>::GetParam();
-
+		//params.print();
+		printf(" Create params in basic tests \n");
 		DecisionTree::DecisionTreeParams tree_params(params.max_depth, params.max_leaves, params.max_features, params.n_bins,
 							     params.split_algo, params.min_rows_per_node, params.bootstrap_features);
+		printf(" Call the DT params to create tree_params \n");
 		RF_params rf_params(params.bootstrap, params.bootstrap_features, params.n_trees, params.rows_sample, tree_params);
-		//rf_params.print();
+		printf(" Create RF params object \n");
+		printf(" RF params : ");
+		rf_params.print();
 
 		//--------------------------------------------------------
 		// Random Forest
@@ -66,26 +83,43 @@ protected:
 		int data_len = params.n_rows * params.n_cols;
 		allocate(data, data_len);
 		allocate(labels, params.n_rows);
+		printf(" allocate labels \n");
                 cudaStream_t stream;
                 CUDA_CHECK(cudaStreamCreate(&stream) );
+		printf(" After  CUDA_CHECK \n");
 
 		// Populate data (assume Col major)
 		std::vector<T> data_h = {30.0, 1.0, 2.0, 0.0, 10.0, 20.0, 10.0, 40.0};
 		data_h.resize(data_len);
-	    updateDevice(data, data_h.data(), data_len, stream);
+		printf(" after data resize \n");
 
+		updateDevice(data, data_h.data(), data_len, stream);
+		printf(" update Device \n");
 		// Populate labels
 		labels_h = {0, 1, 0, 4};
 		labels_h.resize(params.n_rows);
-		preprocess_labels(params.n_rows, labels_h, labels_map);
-	    updateDevice(labels, labels_h.data(), params.n_rows, stream);
+		printf(" labels_h after labels_h.resize(params.n_rows) : ");
+		print(labels_h);
+		printf("\n");
+		printf(" after labels are resized & before preprocessing\n");
+		printf(" preprocess_labels is set to verbose : ");
+		preprocess_labels(params.n_rows, labels_h, labels_map, true);
+
+		std::cout << " preprocessed the labels" << std::flush;
+		updateDevice(labels, labels_h.data(), params.n_rows, stream);
+		std::cout << " updated the device after preprocessing \n" << std::flush;
 
 		rf_classifier = new typename rfClassifier<T>::rfClassifier(rf_params);
-
+		std::cout << " Created the RFClassifier model \n" << std::flush;
+		//printf(" Created the rf_classifier model");
+		
 		cumlHandle handle;
-                handle.setStream(stream);
-
+		std::cout << " Create the cuml Handle \n" << std::flush;
+		handle.setStream(stream);
+		std::cout << " Used the cuml handle to set the stream \n" << std::flush;
 		fit(handle, rf_classifier, data, params.n_rows, params.n_cols, labels, labels_map.size());
+
+		std::cout << " Call the fit function to fit the model on the data \n" << std::flush;
 
 		CUDA_CHECK(cudaStreamSynchronize(stream));
 		CUDA_CHECK(cudaStreamDestroy(stream));
@@ -104,6 +138,7 @@ protected:
     }
 
  	void SetUp() override {
+
 		basicTest();
 	}
 
@@ -135,7 +170,6 @@ protected:
 	std::vector<int> predicted_labels;
 };
 
-
 const std::vector<RfInputs<float> > inputsf2 = {
 	{4, 2, 1, 1.0f, 1.0f, 4, -1, -1, false, false, 4, SPLIT_ALGO::HIST, 2}, // single tree forest, bootstrap false, unlimited depth, 4 bins
 	{4, 2, 1, 1.0f, 1.0f, 4, 8, -1, false, false, 4, SPLIT_ALGO::HIST, 2},	// single tree forest, bootstrap false, depth of 8, 4 bins
@@ -151,7 +185,6 @@ const std::vector<RfInputs<double> > inputsd2 = { // Same as inputsf2
 	{4, 2, 10, 0.8f, 0.8f, 4, 8, -1, true, false, 3, SPLIT_ALGO::HIST, 2},
 	{4, 2, 10, 0.8f, 0.8f, 4, 8, -1, true, false, 3, SPLIT_ALGO::GLOBAL_QUANTILE, 2}
 };
-
 
 typedef RfTest<float> RfTestF;
 TEST_P(RfTestF, Fit) {
