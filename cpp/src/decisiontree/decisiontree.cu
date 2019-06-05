@@ -75,6 +75,7 @@ DecisionTreeParams::DecisionTreeParams(int cfg_max_depth, int cfg_max_leaves, fl
  * @brief Check validity of all decision tree hyper-parameters.
  */
 void DecisionTreeParams::validity_check() const {
+	std::cout << " DT Params :: validty check \n" << std::flush;
 	ASSERT((max_depth == -1) || (max_depth > 0), "Invalid max depth %d", max_depth);
 	ASSERT((max_leaves == -1) || (max_leaves > 0), "Invalid max leaves %d", max_leaves);
 	ASSERT((max_features > 0) && (max_features <= 1.0), "max_features value %f outside permitted (0, 1] range", max_features);
@@ -115,6 +116,7 @@ void DecisionTreeParams::print() const {
 template<typename T>
 void DecisionTreeClassifier<T>::fit(const ML::cumlHandle& handle, T *data, const int ncols, const int nrows, int *labels,
 									unsigned int *rowids, const int n_sampled_rows, int unique_labels, DecisionTreeParams tree_params) {
+	std::cout << " DT Classifier :: fit function \n" << std::flush;
 	tree_params.validity_check();
 	if (tree_params.n_bins > n_sampled_rows) {
 		std::cout << "Warning! Calling with number of bins > number of rows! ";
@@ -137,6 +139,7 @@ void DecisionTreeClassifier<T>::fit(const ML::cumlHandle& handle, T *data, const
  */
 template<typename T>
 void DecisionTreeClassifier<T>::predict(const ML::cumlHandle& handle, const T * rows, const int n_rows, const int n_cols, int* predictions, bool verbose) const {
+	std::cout << " DTC predict function \n" << std::flush;
 	ASSERT(root, "Cannot predict w/ empty tree!");
 	ASSERT((n_rows > 0), "Invalid n_rows %d", n_rows);
 	ASSERT((n_cols > 0), "Invalid n_cols %d", n_cols);
@@ -161,6 +164,7 @@ void DecisionTreeClassifier<T>::print_tree_summary() const {
  */
 template<typename T>
 void DecisionTreeClassifier<T>::print() const {
+	std::cout << " DTC PRINT FUNCTION \n" << std::flush;
 	print_tree_summary();
 	print_node("", root, false);
 }
@@ -169,6 +173,7 @@ template<typename T>
 void DecisionTreeClassifier<T>::plant(const cumlHandle_impl& handle, T *data, const int ncols, const int nrows, int *labels, unsigned int *rowids, const int n_sampled_rows,
 				      int unique_labels, int maxdepth, int max_leaf_nodes, const float colper, int n_bins, int split_algo_flag, int cfg_min_rows_per_node, bool cfg_bootstrap_features) {
 
+	std::cout << " DTC plant function\n" << std::flush;
 	split_algo = split_algo_flag;
 	dinfo.NLocalrows = nrows;
 	dinfo.NGlobalrows = nrows;
@@ -228,9 +233,9 @@ void DecisionTreeClassifier<T>::plant(const cumlHandle_impl& handle, T *data, co
 }
 
 template<typename T>
-TreeNode<T>* DecisionTreeClassifier<T>::grow_tree(T *data, const float colper, int *labels, int depth, unsigned int* rowids,
-												const int n_sampled_rows, GiniInfo prev_split_info) {
+TreeNode<T>* DecisionTreeClassifier<T>::grow_tree(T *data, const float colper, int *labels, int depth, unsigned int* rowids, const int n_sampled_rows, GiniInfo prev_split_info) {
 
+	std::cout << " DTC grow tree \n" << std::flush;
 	TreeNode<T> *node = new TreeNode<T>();
 	GiniQuestion<T> ques;
 	Question<T> node_ques;
@@ -275,15 +280,25 @@ TreeNode<T>* DecisionTreeClassifier<T>::grow_tree(T *data, const float colper, i
 template<typename T>
 void DecisionTreeClassifier<T>::find_best_fruit_all(T *data, int *labels, const float colper, GiniQuestion<T> & ques, float& gain,
 												unsigned int* rowids, const int n_sampled_rows, GiniInfo split_info[3], int depth) {
+	std::cout << " DTC find the best fruit all function \n" << std::flush;
 	std::vector<int>& colselector = feature_selector;
 	
 	// Optimize ginibefore; no need to compute except for root.
 	if (depth == 0) {
-		CUDA_CHECK(cudaHostRegister(colselector.data(), sizeof(int) * colselector.size(), cudaHostRegisterDefault));
+		std::cout << " DTC best fruit func:: the depth == 0 is TRUE \n" << std::flush;
+
+		CUDA_CHECK(cudaHostRegister(colselector.data(), sizeof(int) * colselector.size(), cudaHostRegisterDefault));	
+
+		std::cout << " DTC best fruit func: depth=0,  after cudaHostRegister check \n" << std::flush;
+		std::cout << " DTC best fruit func: depth=0, tempmem[0]->d_colids->data() value  %d " << tempmem[0]->d_colids->data() << "\n" << std::flush;
 		// Copy sampled column IDs to device memory
 		CUDA_CHECK(cudaMemcpyAsync(tempmem[0]->d_colids->data(), colselector.data(), sizeof(int) * colselector.size(), cudaMemcpyHostToDevice, tempmem[0]->stream));
+
+		std::cout << " DTC best fruit func: depth=0,  after cudaMemcpyAsynccheck \n" << std::flush;
+
 		CUDA_CHECK(cudaStreamSynchronize(tempmem[0]->stream));
-	
+
+		std::cout << " DTC BEST FRUIT AFTER THE CUDA_CHECKs ie : cudaHostRegister, cudaMemcpyAsync, cudaStreamSynchronize  \n" << std::flush;
 		int *labelptr = tempmem[0]->sampledlabels->data();
 		get_sampled_labels(labels, labelptr, rowids, n_sampled_rows, tempmem[0]->stream);
 		gini(labelptr, n_sampled_rows, tempmem[0], split_info[0], n_unique_labels);
@@ -294,12 +309,13 @@ void DecisionTreeClassifier<T>::find_best_fruit_all(T *data, int *labels, const 
 	int current_nbins = (n_sampled_rows < nbins) ? n_sampled_rows : nbins;
 	best_split_all_cols(data, rowids, labels, current_nbins, n_sampled_rows, n_unique_labels, dinfo.NLocalrows, colselector,
 						tempmem[0], &split_info[0], ques, gain, split_algo);
+	std::cout << " DTC end of the best fruit function \n" << std::flush;
 }
 
 template<typename T>
 void DecisionTreeClassifier<T>::split_branch(T *data, GiniQuestion<T> & ques, const int n_sampled_rows, int& nrowsleft,
 											int& nrowsright, unsigned int* rowids) {
-
+	std::cout << " DTC split branch function\n" << std::flush;
 	T *temp_data = tempmem[0]->temp_data->data();
 	T *sampledcolumn = &temp_data[n_sampled_rows * ques.bootstrapped_column];
 	make_split(sampledcolumn, ques, n_sampled_rows, nrowsleft, nrowsright, rowids, split_algo, tempmem[0]);
@@ -307,6 +323,7 @@ void DecisionTreeClassifier<T>::split_branch(T *data, GiniQuestion<T> & ques, co
 
 template<typename T>
 void DecisionTreeClassifier<T>::classify_all(const T * rows, const int n_rows, const int n_cols, int* preds, bool verbose) const {
+	std::cout << " DTC classifier all function \n" << std::flush;
 	for (int row_id = 0; row_id < n_rows; row_id++) {
 		preds[row_id] = classify(&rows[row_id * n_cols], root, verbose);
 	}
@@ -315,7 +332,7 @@ void DecisionTreeClassifier<T>::classify_all(const T * rows, const int n_rows, c
 
 template<typename T>
 int DecisionTreeClassifier<T>::classify(const T * row, const TreeNode<T>* const node, bool verbose) const {
-
+	std::cout << " DTC classify function \n" << std::flush;
 	Question<T> q = node->question;
 	if (node->left && (row[q.column] <= q.value)) {
 		if (verbose)
