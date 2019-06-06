@@ -221,12 +221,20 @@ rfClassifier<T>::rfClassifier(RF_params cfg_rf_params): rf<T>::rf(cfg_rf_params,
  */
 template <typename T>
 void rfClassifier<T>::fit(const cumlHandle& user_handle, T * input, int n_rows, int n_cols, int * labels, int n_unique_labels) {
-
+	std::cout << " !!!!!!!!!!!!!!!!!!!!!!!!!! \n ############################### \n %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% \n" << std::flush;
+	std::cout << input << std::flush;
+	std::cout << n_rows << std::flush;
+	std::cout << n_cols << std::flush;
+	std::cout << labels << std::flush;
+	std::cout << input << std::flush;
+	std::cout << n_unique_labels << std::flush;
 	ASSERT(!this->trees, "Cannot fit an existing forest.");
+	std::cout << " After the assert statements \n" << std::flush;
 	ASSERT((n_rows > 0), "Invalid n_rows %d", n_rows);
+	std::cout << " After the assert statements \n" << std::flush;
 	ASSERT((n_cols > 0), "Invalid n_cols %d", n_cols);
 
-	std::cout << " After the assert statements \n" << std::flush;
+
 
 	rfClassifier::trees = new DecisionTree::DecisionTreeClassifier<T>[this->rf_params.n_trees];
 
@@ -380,6 +388,7 @@ template class rfClassifier<double>;
  * @param[in] n_unique_labels: #unique label values (known during preprocessing)
  */
 void fit(const cumlHandle& user_handle, rfClassifier<float> * rf_classifier, float * input, int n_rows, int n_cols, int * labels, int n_unique_labels) {
+
 	rf_classifier->fit(user_handle, input, n_rows, n_cols, labels, n_unique_labels);
 }
 
@@ -459,5 +468,12 @@ RF_metrics cross_validate(const cumlHandle& user_handle, const rfClassifier<doub
 	return rf_classifier->cross_validate(user_handle, input, ref_labels, n_rows, n_cols, predictions, verbose);
 }
 
+
+RF_params set_rf_class_obj(int max_depth, int max_leaves, float max_features, int n_bins, int split_algo, int min_rows_per_node, bool bootstrap_features, bool bootstrap, int n_trees, int rows_sample) {
+	DecisionTree::DecisionTreeParams tree_params(max_depth, max_leaves, max_features, n_bins,
+							     split_algo, min_rows_per_node, bootstrap_features);
+	RF_params rf_params(bootstrap, bootstrap_features, n_trees, rows_sample, tree_params);
+	return rf_params;
+	}
 };
 // end namespace ML
