@@ -21,10 +21,7 @@ cdef extern from "randomforest/randomforest.h" namespace "ML":
         REGRESSION
 
     cdef struct RF_params:
-        bool bootstrap,
-        bool bootstrap_features,
-        int n_trees,
-        float rows_sample
+        pass
 
     cdef cppclass rf:
         pass
@@ -79,13 +76,20 @@ class RandomForest(Base):
     """
     def set_rf_class_obj(self, max_depth, max_leaves, float max_features, n_bins, split_algo, min_rows_per_node, bool bootstrap_features, bool bootstrap, n_trees, row_sample):
 
-        set_rf_class_obj(<int> max_depth, <int> max_leaves, <float> max_features, <int> n_bins, <int> split_algo, <int> min_rows_per_node, <bool> bootstrap_features, <bool> bootstrap, <int> n_trees, <int> row_sample)
-        return self
+        rf_param = set_rf_class_obj(<int> max_depth, <int> max_leaves, <float> max_features, <int> n_bins, <int> split_algo, <int> min_rows_per_node, <bool> bootstrap_features, <bool> bootstrap, <int> n_trees, <int> row_sample)
+        return rf_param
 
     def __init__(self, n_estimators=10, max_depth=None,handle=None,
-                 max_features=None, min_samples_split=None,
-                 bootstrap=True, type="classifier", verbose=False):
+                 max_features=None, min_samples_split=None, n_bins=4,
+                 split_algo=0, min_rows_per_node=2,
+                 bootstrap=True, bootstrap_features=False, type="classifier", verbose=False, rows_sample=1.0, max_leaves=-1):
         self.handle = handle
+        self.n_bins = n_bins
+        self.split_algo = split_algo
+        self.min_rows_per_node = min_rows_per_node
+        self.bootstrap_features = bootstrap_features
+        self.rows_sample = rows_sample
+        self.max_leaves = max_leaves
         #super(RandomForest, self).__init__(handle, verose=False)
         self.n_estimators = n_estimators
         self.max_depth = max_depth
@@ -136,9 +140,9 @@ class RandomForest(Base):
             < cumlHandle * > < size_t > self.handle.getHandle()
 
         n_unique_labels = 2
-        
-        cdef rfClassifier [float] *rf_classifier32 = new rfClassifier[float](self.rf_params)
-        cdef rfClassifier [double] *rf_classifier64 = new rfClassifier[double](self.rf_params)
+        rf_param_obj = set_rf_class_obj(self.max_depth, self.max_leaves, self.max_features, self.n_bins, self.split_algo, self.min_rows_per_node, self.bootstrap_features, self.bootstrap, self.n_estimators, self.row_sample)
+        cdef rfClassifier [float] *rf_classifier32 = new rfClassifier[float](rf_param_obj)
+        cdef rfClassifier [double] *rf_classifier64 = new rfClassifier[double](rf_param_obj)
         pdb.set_trace()
         print("just before calling the fit function")
 
