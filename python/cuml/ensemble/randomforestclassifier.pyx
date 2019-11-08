@@ -286,9 +286,18 @@ class RandomForestClassifier(Base):
                             Minimum decrease in impurity requried for
                             node to be spilt.
     quantile_per_tree : boolean (default = False)
+<<<<<<< HEAD
                         Whether quantile is computed for individual trees in
                         RF. Only relevant for GLOBAL_QUANTILE split_algo.
 
+=======
+                        Whether quantile is computed for individal trees in RF.
+                        Only relevant for GLOBAL_QUANTILE split_algo.
+    seed : int (default = -1)
+           If int, then the seed is used by the models random number
+           generator. It is used to reproduce the same result over multiple
+           runs.
+>>>>>>> abc3a8f8b364cd85eb7c0b47f582e66ea7d126a2
     """
 
     variables = ['n_estimators', 'max_depth', 'handle',
@@ -363,6 +372,9 @@ class RandomForestClassifier(Base):
         self.n_cols = None
         self.n_streams = handle.getNumInternalStreams()
         self.seed = seed
+
+        if ((seed != -1) and (n_streams != 1)):
+            warnings.warn("Random seed only works with n_streams=1.")
 
         cdef RandomForestMetaData[float, int] *rf_forest = \
             new RandomForestMetaData[float, int]()

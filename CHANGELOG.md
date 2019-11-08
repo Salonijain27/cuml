@@ -36,6 +36,7 @@
 - PR #1319: Using machineName arg passed in instead of default for ASV reporting
 - PR #1326: Fix illegal memory access in make_regression (bounds issue)
 - PR #1330: Fix C++ unit test utils for better handling of differences near zero
+- PR #1313: Updated the RF tests to set the seed and n_streams
 
 # cuML 0.10.0 (16 Oct 2019)
 

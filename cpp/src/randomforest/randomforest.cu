@@ -19,6 +19,7 @@
 #define omp_get_max_threads() 1
 #endif
 #include <cuml/ensemble/randomforest.hpp>
+#include <iostream>
 #include "randomforest_impl.cuh"
 
 namespace ML {
@@ -155,6 +156,8 @@ void set_rf_params(RF_params& params, int cfg_n_trees, bool cfg_bootstrap,
   params.bootstrap = cfg_bootstrap;
   params.rows_sample = cfg_rows_sample;
   params.seed = cfg_seed;
+  std::cout << "params.seed val in set_rf_params: ",
+    params.seed << std::flush << std::endl;
   params.n_streams = min(cfg_n_streams, omp_get_max_threads());
   if (params.n_streams == cfg_n_streams) {
     std::cout << "Warning! Max setting Max streams to max openmp threads "
@@ -180,6 +183,8 @@ void set_all_rf_params(RF_params& params, int cfg_n_trees, bool cfg_bootstrap,
   params.bootstrap = cfg_bootstrap;
   params.rows_sample = cfg_rows_sample;
   params.seed = cfg_seed;
+  std::cout << "params.seed val in set_all_rf_params: ",
+    params.seed << std::flush << std::endl;
   params.n_streams = min(cfg_n_streams, omp_get_max_threads());
   if (cfg_n_trees < params.n_streams) params.n_streams = cfg_n_trees;
   set_tree_params(params.tree_params);  // use input tree params
@@ -207,6 +212,7 @@ void print(const RF_params rf_params) {
   std::cout << "bootstrap: " << rf_params.bootstrap << std::endl;
   std::cout << "rows_sample: " << rf_params.rows_sample << std::endl;
   std::cout << "n_streams: " << rf_params.n_streams << std::endl;
+  std::cout << "seed: " << rf_params.seed << std::endl;
   DecisionTree::print(rf_params.tree_params);
 }
 
@@ -471,6 +477,7 @@ RF_params set_rf_class_obj(int max_depth, int max_leaves, float max_features,
     min_rows_per_node, min_impurity_decrease, bootstrap_features,
     split_criterion, quantile_per_tree);
   RF_params rf_params;
+  std::cout << "seed val in set_rf_class_obj: ", seed << '\n';
   set_all_rf_params(rf_params, n_trees, bootstrap, rows_sample, seed,
                     cfg_n_streams, tree_params);
   return rf_params;
