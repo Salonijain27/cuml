@@ -68,7 +68,8 @@ class RfTreeliteTestCommon : public ::testing::TestWithParam<RfInputs<T>> {
     // Test the implementation for converting fitted forest into treelite format.
     ModelHandle model;
     std::vector<unsigned char> vec_data;
-    build_treelite_forest(&model, forest, params.n_cols, task_category,
+    int wor = 0;
+    build_treelite_forest(&model, forest, params.n_cols, task_category, wor,
                           vec_data);
 
     std::string test_name =

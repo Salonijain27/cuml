@@ -353,7 +353,8 @@ class RandomForestRegressor(Base):
 
     def _get_model_info(self):
         cdef ModelHandle cuml_model_ptr = NULL
-
+        ### worker added for MNMG
+        worker = 0
         task_category = 1
         cdef RandomForestMetaData[float, float] *rf_forest = \
             <RandomForestMetaData[float, float]*><size_t> self.rf_forest
@@ -361,6 +362,7 @@ class RandomForestRegressor(Base):
                               rf_forest,
                               <int> self.n_cols,
                               <int> task_category,
+                              <int> worker,
                               <vector[unsigned char] &> self.model_pbuf_bytes)
 
         mod_ptr = <size_t> cuml_model_ptr
@@ -466,11 +468,14 @@ class RandomForestRegressor(Base):
         cdef RandomForestMetaData[float, float] *rf_forest = \
             <RandomForestMetaData[float, float]*><size_t> self.rf_forest
 
+        ### worker added for MNMG
+        worker = 0
         task_category = 1  # for regression
         build_treelite_forest(& cuml_model_ptr,
                               rf_forest,
                               <int> n_cols,
                               <int> task_category,
+                              <int> worker,
                               <vector[unsigned char] &> self.model_pbuf_bytes)
         mod_ptr = <size_t> cuml_model_ptr
         treelite_handle = ctypes.c_void_p(mod_ptr).value
