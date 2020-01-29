@@ -1,1 +1,52 @@
- get dump of bst :  ['0:[f11<-0.26646933] yes=1,no=2,missing=1\n\t1:[f12<0.836978436] yes=3,no=4,missing=3\n\t\t3:[f9<-2.42303562] yes=7,no=8,missing=7\n\t\t\t7:leaf=-0.333333373\n\t\t\t8:[f7<-0.683467388] yes=15,no=16,missing=15\n\t\t\t\t15:leaf=0.150000006\n\t\t\t\t16:[f14<1.84642458] yes=27,no=28,missing=27\n\t\t\t\t\t27:leaf=0.578313291\n\t\t\t\t\t28:leaf=0.150000006\n\t\t4:[f9<2.10246086] yes=9,no=10,missing=9\n\t\t\t9:[f5<2.7119956] yes=17,no=18,missing=17\n\t\t\t\t17:leaf=-0.458823562\n\t\t\t\t18:leaf=0.0666666701\n\t\t\t10:leaf=0.24000001\n\t2:[f5<-0.381907403] yes=5,no=6,missing=5\n\t\t5:[f16<-1.40071857] yes=11,no=12,missing=11\n\t\t\t11:[f15<-2.27961397] yes=19,no=20,missing=19\n\t\t\t\t19:leaf=-0\n\t\t\t\t20:[f2<1.58745694] yes=29,no=30,missing=29\n\t\t\t\t\t29:leaf=-0.572413802\n\t\t\t\t\t30:leaf=-0.150000006\n\t\t\t12:[f5<-0.882885396] yes=21,no=22,missing=21\n\t\t\t\t21:[f17<1.49596953] yes=31,no=32,missing=31\n\t\t\t\t\t31:[f8<1.68116069] yes=41,no=42,missing=41\n\t\t\t\t\t\t41:[f1<1.18270612] yes=57,no=58,missing=57\n\t\t\t\t\t\t\t57:[f12<-1.49854398] yes=73,no=74,missing=73\n\t\t\t\t\t\t\t\t73:leaf=-0.0666666701\n\t\t\t\t\t\t\t\t74:[f1<-1.11652374] yes=87,no=88,missing=87\n\t\t\t\t\t\t\t\t\t87:leaf=-0.150000006\n\t\t\t\t\t\t\t\t\t88:leaf=-0.537931085\n\t\t\t\t\t\t\t58:leaf=-0\n\t\t\t\t\t\t42:leaf=-0\n\t\t\t\t\t32:leaf=0.150000006\n\t\t\t\t22:[f7<-0.470715225] yes=33,no=34,missing=33\n\t\t\t\t\t33:leaf=-0.41538465\n\t\t\t\t\t34:[f13<-0.371264726] yes=43,no=44,missing=43\n\t\t\t\t\t\t43:leaf=-0.150000006\n\t\t\t\t\t\t44:leaf=0.388235331\n\t\t6:[f7<-0.335142195] yes=13,no=14,missing=13\n\t\t\t13:[f16<-1.78092885] yes=23,no=24,missing=23\n\t\t\t\t23:leaf=0.400000036\n\t\t\t\t24:[f19<1.49141181] yes=35,no=36,missing=35\n\t\t\t\t\t35:[f5<-0.305988252] yes=45,no=46,missing=45\n\t\t\t\t\t\t45:leaf=-0\n\t\t\t\t\t\t46:[f8<1.77752137] yes=59,no=60,missing=59\n\t\t\t\t\t\t\t59:[f4<-1.94061804] yes=75,no=76,missing=75\n\t\t\t\t\t\t\t\t75:leaf=-0.150000006\n\t\t\t\t\t\t\t\t76:[f14<-1.83223486] yes=89,no=90,missing=89\n\t\t\t\t\t\t\t\t\t89:leaf=-0.150000006\n\t\t\t\t\t\t\t\t\t90:[f15<1.69023538] yes=95,no=96,missing=95\n\t\t\t\t\t\t\t\t\t\t95:leaf=-0.558974385\n\t\t\t\t\t\t\t\t\t\t96:leaf=-0.150000006\n\t\t\t\t\t\t\t60:leaf=-0\n\t\t\t\t\t36:[f12<0.422960579] yes=47,no=48,missing=47\n\t\t\t\t\t\t47:leaf=-0.333333373\n\t\t\t\t\t\t48:[f7<-0.813440681] yes=61,no=62,missing=61\n\t\t\t\t\t\t\t61:leaf=-0.150000006\n\t\t\t\t\t\t\t62:leaf=0.333333373\n\t\t\t14:[f9<-1.11067843] yes=25,no=26,missing=25\n\t\t\t\t25:[f15<-1.05432689] yes=37,no=38,missing=37\n\t\t\t\t\t37:[f4<0.446174324] yes=49,no=50,missing=49\n\t\t\t\t\t\t49:[f1<0.529160738] yes=63,no=64,missing=63\n\t\t\t\t\t\t\t63:leaf=-0.300000012\n\t\t\t\t\t\t\t64:leaf=-0\n\t\t\t\t\t\t50:leaf=0.300000012\n\t\t\t\t\t38:[f7<1.33109391] yes=51,no=52,missing=51\n\t\t\t\t\t\t51:[f5<-0.0205542706] yes=65,no=66,missing=65\n\t\t\t\t\t\t\t65:leaf=0.163636371\n\t\t\t\t\t\t\t66:leaf=0.495000005\n\t\t\t\t\t\t52:leaf=-0\n\t\t\t\t26:[f11<1.32985842] yes=39,no=40,missing=39\n\t\t\t\t\t39:[f7<0.307116866] yes=53,no=54,missing=53\n\t\t\t\t\t\t53:[f5<1.06844115] yes=67,no=68,missing=67\n\t\t\t\t\t\t\t67:[f1<1.10094333] yes=77,no=78,missing=77\n\t\t\t\t\t\t\t\t77:[f0<-1.49143386] yes=91,no=92,missing=91\n\t\t\t\t\t\t\t\t\t91:leaf=-0\n\t\t\t\t\t\t\t\t\t92:leaf=0.456\n\t\t\t\t\t\t\t\t78:leaf=-0.200000018\n\t\t\t\t\t\t\t68:[f8<1.17370558] yes=79,no=80,missing=79\n\t\t\t\t\t\t\t\t79:leaf=-0.466666698\n\t\t\t\t\t\t\t\t80:leaf=0.150000006\n\t\t\t\t\t\t54:[f11<1.15421462] yes=69,no=70,missing=69\n\t\t\t\t\t\t\t69:[f4<-1.51563561] yes=81,no=82,missing=81\n\t\t\t\t\t\t\t\t81:leaf=0.150000006\n\t\t\t\t\t\t\t\t82:leaf=0.551020443\n\t\t\t\t\t\t\t70:[f1<-0.0209127851] yes=83,no=84,missing=83\n\t\t\t\t\t\t\t\t83:leaf=0.150000006\n\t\t\t\t\t\t\t\t84:leaf=-0.300000012\n\t\t\t\t\t40:[f5<1.83513045] yes=55,no=56,missing=55\n\t\t\t\t\t\t55:[f8<1.10109723] yes=71,no=72,missing=71\n\t\t\t\t\t\t\t71:[f8<-1.01715994] yes=85,no=86,missing=85\n\t\t\t\t\t\t\t\t85:leaf=-0\n\t\t\t\t\t\t\t\t86:[f7<-0.162264049] yes=93,no=94,missing=93\n\t\t\t\t\t\t\t\t\t93:leaf=-0.150000006\n\t\t\t\t\t\t\t\t\t94:leaf=-0.529411793\n\t\t\t\t\t\t\t72:leaf=0.150000006\n\t\t\t\t\t\t56:leaf=0.24000001\n']
+ model.num_features : 0
+depth of the model : 10
+num nodes in fil 2047
+node.leaf_value : -0.333333
+node.leaf_value : 0.15
+node.leaf_value : 0.578313
+node.leaf_value : 0.15
+node.leaf_value : -0.458824
+node.leaf_value : 0.0666667
+node.leaf_value : 0.24
+node.leaf_value : -0
+node.leaf_value : -0.572414
+node.leaf_value : -0.15
+node.leaf_value : -0.0666667
+node.leaf_value : -0.15
+node.leaf_value : -0.537931
+node.leaf_value : -0
+node.leaf_value : -0
+node.leaf_value : 0.15
+node.leaf_value : -0.415385
+node.leaf_value : -0.15
+node.leaf_value : 0.388235
+node.leaf_value : 0.4
+node.leaf_value : -0
+node.leaf_value : -0.15
+node.leaf_value : -0.15
+node.leaf_value : -0.558974
+node.leaf_value : -0.15
+node.leaf_value : -0
+node.leaf_value : -0.333333
+node.leaf_value : -0.15
+node.leaf_value : 0.333333
+node.leaf_value : -0.3
+node.leaf_value : -0
+node.leaf_value : 0.3
+node.leaf_value : 0.163636
+node.leaf_value : 0.495
+node.leaf_value : -0
+node.leaf_value : -0
+node.leaf_value : 0.456
+node.leaf_value : -0.2
+node.leaf_value : -0.466667
+node.leaf_value : 0.15
+node.leaf_value : 0.15
+node.leaf_value : 0.55102
+node.leaf_value : 0.15
+node.leaf_value : -0.3
+node.leaf_value : -0
+node.leaf_value : -0.15
+node.leaf_value : -0.529412
+node.leaf_value : 0.15
+node.leaf_value : 0.24
