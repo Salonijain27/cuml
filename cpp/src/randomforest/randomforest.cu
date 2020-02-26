@@ -421,7 +421,6 @@ void predict(const cumlHandle& user_handle,
                          forest, verbose);
 }
 /** @} */
-
 /**
  * @defgroup Random Forest Classification - Predict function
  * @brief Predict target feature for input data; n-ary classification for

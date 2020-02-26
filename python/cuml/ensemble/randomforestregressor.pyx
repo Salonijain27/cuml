@@ -357,7 +357,7 @@ class RandomForestRegressor(Base):
     def _get_model_info(self):
         cdef ModelHandle cuml_model_ptr = NULL
 
-        task_category = 1
+        task_category = REGRESSION_CATEGORY
         cdef RandomForestMetaData[float, float] *rf_forest = \
             <RandomForestMetaData[float, float]*><size_t> self.rf_forest
         build_treelite_forest(& cuml_model_ptr,
@@ -370,6 +370,27 @@ class RandomForestRegressor(Base):
         fit_mod_ptr = ctypes.c_void_p(mod_ptr).value
         cdef uintptr_t model_ptr = <uintptr_t> fit_mod_ptr
         model_protobuf_bytes = save_model(<ModelHandle> model_ptr)
+        return model_protobuf_bytes
+
+    def _tl_model_handles(self, model_bytes):
+        cdef ModelHandle cuml_model_ptr = NULL
+        cdef RandomForestMetaData[float, int] *rf_forest = \
+            <RandomForestMetaData[float, int]*><size_t> self.rf_forest
+        task_category = REGRESSION_CATEGORY
+        build_treelite_forest(& cuml_model_ptr,
+                              rf_forest,
+                              <int> self.n_cols,
+                              <int> task_category,
+                              <vector[unsigned char] &> model_bytes)
+        mod_handle = <size_t> cuml_model_ptr
+
+        return ctypes.c_void_p(mod_handle).value
+
+    def _read_mod_handles(self, mod_handles):
+
+        cdef uintptr_t model_ptr = <uintptr_t> mod_handles
+        model_protobuf_bytes = save_model(<ModelHandle> model_ptr)
+
         return model_protobuf_bytes
 
     def fit(self, X, y):
@@ -456,8 +477,9 @@ class RandomForestRegressor(Base):
         del(y_m)
         return self
 
-    def _predict_model_on_gpu(self, X, algo, convert_dtype,
-                              fil_sparse_format, task_category=1):
+    def _predict_model_on_gpu(self, X, algo,
+                              convert_dtype, fil_sparse_format, 
+                              task_category=REGRESSION_CATEGORY):
 
         cdef ModelHandle cuml_model_ptr
         X_m, _, n_rows, n_cols, _ = \
@@ -469,7 +491,7 @@ class RandomForestRegressor(Base):
         cdef RandomForestMetaData[float, float] *rf_forest = \
             <RandomForestMetaData[float, float]*><size_t> self.rf_forest
 
-        task_category = 1  # for regression
+        task_category = REGRESSION_CATEGORY  # for regression
         build_treelite_forest(& cuml_model_ptr,
                               rf_forest,
                               <int> n_cols,
@@ -606,9 +628,9 @@ class RandomForestRegressor(Base):
                             setting predict_model = 'CPU'")
 
         else:
-            preds = self._predict_model_on_gpu(X, algo, convert_dtype,
-                                               fil_sparse_format,
-                                               task_category=1)
+            preds = self._predict_model_on_gpu(
+                X, algo, convert_dtype, fil_sparse_format,
+                task_category=REGRESSION_CATEGORY)
 
         return preds
 

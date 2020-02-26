@@ -369,7 +369,7 @@ class RandomForestClassifier(Base):
 
     def _get_model_info(self):
         cdef ModelHandle cuml_model_ptr = NULL
-        task_category = 1
+        task_category = CLASSIFICATION_CATEGORY
         cdef RandomForestMetaData[float, int] *rf_forest = \
             <RandomForestMetaData[float, int]*><size_t> self.rf_forest
         build_treelite_forest(& cuml_model_ptr,
@@ -381,6 +381,27 @@ class RandomForestClassifier(Base):
         mod_ptr = <size_t> cuml_model_ptr
         fit_mod_ptr = ctypes.c_void_p(mod_ptr).value
         cdef uintptr_t model_ptr = <uintptr_t> fit_mod_ptr
+        model_protobuf_bytes = save_model(<ModelHandle> model_ptr)
+
+        return model_protobuf_bytes
+
+    def _tl_model_handles(self, model_bytes):
+        cdef ModelHandle cuml_model_ptr = NULL
+        cdef RandomForestMetaData[float, int] *rf_forest = \
+            <RandomForestMetaData[float, int]*><size_t> self.rf_forest
+        task_category = CLASSIFICATION_CATEGORY
+        build_treelite_forest(& cuml_model_ptr,
+                              rf_forest,
+                              <int> self.n_cols,
+                              <int> task_category,
+                              <vector[unsigned char] &> model_bytes)
+        mod_handle = <size_t> cuml_model_ptr
+
+        return ctypes.c_void_p(mod_handle).value
+
+    def _read_mod_handles(self, mod_handles):
+
+        cdef uintptr_t model_ptr = <uintptr_t> mod_handles
         model_protobuf_bytes = save_model(<ModelHandle> model_ptr)
 
         return model_protobuf_bytes

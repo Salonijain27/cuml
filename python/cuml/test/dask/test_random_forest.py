@@ -79,6 +79,7 @@ def test_rf_classification_dask(partitions_per_worker, cluster):
                                                      partitions_per_worker)
         cu_rf_mg = cuRFC_mg(**cu_rf_params)
         cu_rf_mg.fit(X_train_df, y_train_df)
+        cu_rf_mg.check_treelite_handles()
         cu_rf_mg_predict = cu_rf_mg.predict(X_test)
 
         acc_score = accuracy_score(cu_rf_mg_predict, y_test, normalize=True)
@@ -188,6 +189,7 @@ def test_rf_regression_dask(partitions_per_worker, cluster):
         X_test_cudf = cudf.DataFrame.from_gpu_matrix(rmm.to_device(X_test))
         cu_rf_mg = cuRFR_mg(**cu_rf_params)
         cu_rf_mg.fit(X_train_df, y_train_df)
+        cu_rf_mg.check_treelite_handles()
         cu_rf_mg_predict = cu_rf_mg.predict(X_test_cudf)
 
         acc_score = r2_score(cu_rf_mg_predict, y_test)
