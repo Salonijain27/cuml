@@ -478,7 +478,7 @@ class RandomForestRegressor(Base):
         return self
 
     def _predict_model_on_gpu(self, X, algo,
-                              convert_dtype, fil_sparse_format, 
+                              convert_dtype, fil_sparse_format,
                               task_category=REGRESSION_CATEGORY):
 
         cdef ModelHandle cuml_model_ptr
