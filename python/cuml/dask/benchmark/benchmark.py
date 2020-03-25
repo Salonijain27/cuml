@@ -1,11 +1,17 @@
 from dask_cuda import LocalCUDACluster
 from dask.distributed import Client, wait, futures_of, performance_report
 import dask.array as da
-from cuml.dask.linear_model import LinearRegression
+import dask.dataframe as dd
+from cuml.dask.ensemble import RandomForestRegressor
 from cuml.dask.datasets.regression import make_regression
 from cuml.dask.common.comms import CommsContext
+from cuml.dask.common import to_dask_cudf
 import cudf
+import pandas as pd
 import dask_cudf
+from numba import cuda
+import psutil
+
 import numpy as np
 import sys
 from time import time, sleep
@@ -21,6 +27,42 @@ base_n_points = 250_000_000
 n_gb_data = np.asarray([2], dtype=int)
 base_n_features = np.asarray([250], dtype=int)
 
+def get_meta(df):
+    ret = df.iloc[:0]
+    return ret
+
+# ideal_benchmark_f = open('/gpfs/fs1/dgala/b_outs/ideal_benchmark_f.csv', 'a')
+def _combine_data(X, n_features, n_workers, n_partitions):
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print("X in _combine  data : ", type(X))   #X_comb = np.concatenate((X[0],X[1]))
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print(" SHAPE OF X before comb :", X)
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    X = cp.asarray(X)
+    #X_comb = cp.concatenate(X[0], X[1])
+    print("X in _combine  data  AFTER CONVERSION : ", type(X))    #X_comb = np.concatenate((X[0],X[1]))
+    print(" X_comb : ", X.shape)
+
+    if n_features:
+        print("convert datat to a cudf dataframe")
+        X_cudf = cudf.DataFrame.from_gpu_matrix(X)
+        print("convert datat to a DASK cudf dataframe")
+        X_train_df = dask_cudf.from_cudf(X_cudf, npartitions=n_partitions)
+
+    else:
+        """
+        X_np = cp.asnumpy(X_comb)
+        X_cudf = cudf.Series(X_cudf)
+        X_df = \
+        dask_cudf.from_cudf(X_cudf, npartitions=n_partitions)
+        """
+    print(X_train_df.shape)
+    print(X_train_df.strides)
+    print(X_train_df.flags)
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+    return X
 # ideal_benchmark_f = open('/gpfs/fs1/dgala/b_outs/ideal_benchmark_f.csv', 'a')
 
 def _read_data(file_list, n_samples, n_features):
@@ -34,13 +76,34 @@ def _read_data(file_list, n_samples, n_features):
         for i in range(len(file_list)):
             X[i * n_samples: (i + 1) * n_samples] = cp.load(file_list[i])[:n_samples]
 
-    print(X.shape)
-    print(X.strides)
-    print(X.flags)
-    # X = cp.concatenate(X, axis=0)
+    print(" SHAPE OF X BEFORE CUDF DATAFRAME : ", X.shape)
+    print(" CONVERT CUPY ARRAY TO CUDF DATAFRAME ")
+    if n_features:
+        X_df = cudf.DataFrame.from_gpu_matrix(X)
+    else:
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+
+        print("Shape of X : ", X.shape[0])
+        print("**********************************************")
+        X_np = cp.asnumpy(X)
+        print(" TYPE OF X AFTER CONVERSION TO NP : ", type(X_np))
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+        X_pd = pd.Series(X_np)
+        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+        X_df = cudf.Series(X_pd)
+        #X = cp.reshape(X, (X.shape[0],1), order='F')
+        #print("Shape of X : ", X.shape)
+        #X_df = cudf.DataFrame.from_gpu_matrix((X,X))
+        #X_df = X_df.drop(0)
+        #print(" HEAD OF X IN READ : ", X_df.head(5))
+    print(" TYPE OF DATA AFTER CONVERSION : ", type(X_df))
     # X = cp.array(X, order='F')
     # del X
-    return X
+    return X_df
+    
+    #return X
 
 
 def read_data(client, path, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb, gb_partitions=None):
@@ -69,20 +132,35 @@ def read_data(client, path, n_workers, workers, n_samples, n_features, n_gb, n_s
 
     wait([X])
 
+    
+    X = to_dask_cudf(X, client=client)
+    print("############################################")
+    print(" THE TDATAT TYPE OF x IS : ", type(X))
+    print(" READ DATA IS NOW OVER : PHEW ")
+    """
     if n_features:
         X = [da.from_delayed(dask.delayed(x), meta=cp.zeros(1, dtype=cp.float32),
             shape=(np.nan, n_features),
             dtype=cp.float32) for x in X]
+
     else:
         X = [da.from_delayed(dask.delayed(x), meta=cp.zeros(1, dtype=cp.float32),
             shape=(np.nan, ),
             dtype=cp.float32) for x in X] 
 
+    #X = [x.to_dask_dataframe() for x in X]
+    
+    print(" FINAL TYPE OF X RETURNING FROM READ : ", type(X))
     X = da.concatenate(X, axis=0, allow_unknown_chunksizes=True)
+    """
+    #X = X.to_dask_dataframe()
 
     return X
 
 def _mse(ytest, yhat):
+    print(" INSIDE THE _MSE FUNC ")
+    print(" TYPE OF DATA IN  YTEST : ", type(ytest))
+    print(" TYPE OF DATA IN  YHAT : ", type(yhat))
     if ytest.shape == yhat.shape:
         return (cp.mean((ytest - yhat) ** 2), ytest.shape[0])
     else:
@@ -90,44 +168,29 @@ def _mse(ytest, yhat):
 
 
 def dask_mse(ytest, yhat, client, workers):
-    ytest_parts = client.sync(extract_arr_partitions, ytest, client)
-    yhat_parts = client.sync(extract_arr_partitions, yhat, client)
-    mse_parts = np.asarray([client.submit(_mse, ytest_parts[i][1], yhat_parts[i][1]).result() for i in range(len(ytest_parts))])
-    mse_parts[:, 0] = mse_parts[:, 0] * mse_parts[:, 1]
-    return np.sum(mse_parts[:, 0]) / np.sum(mse_parts[:, 1])
+    print(" DASK MSE CALC FUNCTION ")
+    print(" TYPE OF YTEST :  ", type(ytest))
+    print(" TYPE OF Y HAT/ PREDS : ", type(yhat))
+    #ytest_parts = client.sync(extract_arr_partitions, ytest, client)
+    #print(" GOT THE Y_TEST PARTS ")
+    #yhat_parts = client.sync(extract_arr_partitions, yhat, client)
+    print(" GOT THE PREDS PARTS ")
+    print(" CALLING THE INTERNAL _MSE FUNCTION ")
+    mse_parts = np.asarray([client.submit(_mse, ytest, yhat_parts).result()])
+    print(" CALC THE MSE OF EVERYTHING ")
+    #mse_parts[:, 0] = mse_parts[:, 0] * mse_parts[:, 1]
+    #return np.sum(mse_parts[:, 0]) / np.sum(mse_parts[:, 1])
+    return 0
 
 
 def set_alloc():
     cp.cuda.set_allocator(rmm.rmm_cupy_allocator)
 
-
-def make_client(n_workers=2):
-    cluster = LocalCUDACluster(n_workers=n_workers)
-    client = Client(cluster)
-    return client
-
-
-def check_order(x):
-    print(x.flags.f_contiguous, x.strides)
-    return x
-
-
-def transpose_and_move(X, client, workers, n_samples, n_workers, n_features):
-    futures = client.sync(extract_arr_partitions, X, client)
-    futures = [client.submit(cp.array, futures[i][1], order="F", workers=[workers[i]]) for i in range(len(futures))]
-    wait([futures])
-
-    X = [da.from_delayed(dask.delayed(x), meta=cp.zeros(1, dtype=cp.float64), shape=(n_samples / n_workers, n_features), dtype=cp.float64) for x in futures]
-    X = da.concatenate(X, axis=0, allow_unknown_chunksizes=True)
-    # X_arr = X_arr.map_blocks(check_order, dtype=cp.float32)
-    return X
-    # return X_arr
-
-
-def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, scheduler_file):
+def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features,n_partitions, scheduler_file):
 
     # for n_gb_m in n_gb_data:
     #     for n_features in base_n_features:
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     if scheduler_file == 'None':
         cluster = LocalCUDACluster(n_workers=n_workers)
     fit_time = np.zeros(6)
@@ -142,47 +205,74 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, sch
                 client = Client(cluster)
             client.run(set_alloc)
 
-            workers = list(client.has_what().keys())
-            print(workers)
+            try:
+                workers = list(client.has_what().keys())
+                print(workers)
+    
+                n_samples = int(n_points / n_features)
+                n_samples_per_gb = int(n_samples / n_gb)
+                # X, y = make_regression(n_samples=n_samples, n_features=n_features, n_informative=n_features / 10, n_parts=n_workers)
 
-            n_samples = int(n_points / n_features)
-            n_samples_per_gb = int(n_samples / n_gb)
-            # X, y = make_regression(n_samples=n_samples, n_features=n_features, n_informative=n_features / 10, n_parts=n_workers)
+                # X = X.rechunk((n_samples / n_workers, n_features))
+                # y = y.rechunk(n_samples / n_workers )
 
-            # X = X.rechunk((n_samples / n_workers, n_features))
-            # y = y.rechunk(n_samples / n_workers )
+                X = read_data(client, X_filepath, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb)
+                #print(X.compute_chunk_sizes().chunks)
+                wait(X)
 
-            X = read_data(client, X_filepath, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb)
-            print(X.compute_chunk_sizes().chunks)
-            y = read_data(client, y_filepath, n_workers, workers, n_samples, None, n_gb, n_samples_per_gb)
-            print(y.compute_chunk_sizes().chunks)
-            print(client.has_what())
-            
-            lr = LinearRegression(client=client)
+                #print(" FINAL TYPE OF X RETURNED : ", type(X))
+                y = read_data(client, y_filepath, n_workers, workers, n_samples, None, n_gb, n_samples_per_gb)
+                #print(y.compute_chunk_sizes().chunks)
+                #print(" FINAL TYPE OF y RETURNED : ", type(y))
+                wait(y)
 
-            start_fit_time = time()
-            lr.fit(X, y)
-            end_fit_time = time()
-            print("nGPUS: ", n_workers, ", Shape: ", X.shape, ", Fit Time: ", end_fit_time - start_fit_time)
-            fit_time[i] = end_fit_time - start_fit_time
+                rfr = RandomForestRegressor(max_depth=16)
+                print(rfr)
+                print(" ######################################################## ")
+                print(" ######################################################## ")
+                print(" ######################################################## ")
+                free_mem = cuda.current_context().get_memory_info()[0]
+                print(" FREE GPU MEMORY BEFORE FIT : ", free_mem)
+                print(" CPU MEMORY BEFORE FIT : ", psutil.cpu_percent())
+                print(" CPU MEMORY ALL INFO AS DICT : ", dict(psutil.virtual_memory()._asdict()))
+                start_fit_time = time()
+                print(" START FITTING THE  MODEL")
+                rfr.fit(X, y)
+                print(" FINISH FIT ")
+                end_fit_time = time()
+                print("nGPUS: ", n_workers, ", Shape: ", X.shape, ", Fit Time: ", end_fit_time - start_fit_time)
+                fit_time[i] = end_fit_time - start_fit_time
+                free_mem_2 = cuda.current_context().get_memory_info()[0]
+                print(" FREE MEMORY AFTER FIT : ", free_mem_2)
+                print(" CPU MEMORY AFTER FIT : ", psutil.cpu_percent())
+                print(" CPU MEMORY ALL INFO AS DICT AFTER : ", dict(psutil.virtual_memory()._asdict()))
 
-            start_pred_time = time()
-            preds = lr.predict(X)
-            parts = client.sync(extract_arr_partitions, preds, client)
-            wait([p for w, p in parts])
-            # wait(client.compute(preds))
-            end_pred_time = time()
-            print("nGPUS: ", n_workers, ", Shape: ", X.shape, ", Predict Time: ", end_pred_time - start_pred_time)
-            pred_time[i] = end_pred_time - start_pred_time
+                start_pred_time = time()
+                print(" Start PREDICTION ")
+                preds = rfr.predict(X, predict_model='GPU')
+                print("preds : ", preds)
+                print(" FINISH PREDS ")
+                #parts = client.sync(extract_arr_partitions, preds, client)
+                print(" GET PARTS FROM PREDS $$$$$$$$$$$$$")
+                wait(preds)
+                # wait(client.compute(preds))
+                #mse = calc_mse
+                print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+                print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+                end_pred_time = time()
+                print("nGPUS: ", n_workers, ", Shape: ", X.shape, ", Predict Time: ", end_pred_time - start_pred_time)
+                pred_time[i] = end_pred_time - start_pred_time
+                print(" CHECK TH MSE VALUE OF PREDS RFR ")
+                #print(cp.mean((ytest - yhat) ** 2), ytest.shape[0])
+                mse[i] = dask_mse(y, preds, client, workers)
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                print(mse[i])
 
-            mse[i] = dask_mse(y, preds, client, workers)
-            print(mse[i])
+                del X, y, preds
 
-            del X, y, preds
-
-        except Exception as e:
-            print(e)
-            continue
+            except Exception as e:
+                print(e)
+                continue
 
         finally:
             if 'X' in vars():
@@ -192,8 +282,9 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, sch
             if 'preds' in vars():
                 del preds
 
-            client.close()
+        client.close()
 
+    
     if scheduler_file == 'None':
         cluster.close()
     print("starting write")
@@ -201,7 +292,7 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, sch
     pred_stats = [np.mean(pred_time[1:]), np.min(pred_time[1:]), np.var(pred_time[1:]), np.mean(mse[1:])]
     to_write = ','.join(map(str, [n_workers, n_samples, n_features] + fit_stats + pred_stats))
     print(to_write)
-    with open('/gpfs/fs1/dgala/b_outs/benchmark.csv', 'a') as f:
+    with open('/gpfs/fs1/saljain/b_outs/benchmark.csv', 'a') as f:
         f.write(to_write)
         f.write('\n')
     print("ending write")
@@ -216,4 +307,5 @@ if __name__ == '__main__':
     n_gb = int(sys.argv[4])
     n_features = int(sys.argv[5])
     scheduler_file = sys.argv[6]
-    run_ideal_benchmark(n_gpus, X_filepath, y_filepath, n_gb, n_features, scheduler_file)
+    n_partitions = int(sys.argv[7])
+    run_ideal_benchmark(n_gpus, X_filepath, y_filepath, n_gb, n_features, n_partitions, scheduler_file)

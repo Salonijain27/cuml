@@ -391,14 +391,17 @@ class RandomForestClassifier(DelayedPredictionMixin):
             will increase memory used for the method.
         """
         c = default_client()
-
+        print(" type of X in RF Reg : ", type(X))
+        print(" get the num classes in y ")
         self.num_classes = len(y.unique())
+        print(" get  the workers to parts information ")
         X_futures = workers_to_parts(c.sync(extract_ddf_partitions, X))
         y_futures = workers_to_parts(c.sync(extract_ddf_partitions, y))
-
+        print(" get the worker to parts information ")
         X_partition_workers = [w for w, xc in X_futures.items()]
         y_partition_workers = [w for w, xc in y_futures.items()]
-
+        
+        print(" check the worker to parts info ")
         if set(X_partition_workers) != set(self.workers) or \
            set(y_partition_workers) != set(self.workers):
             raise ValueError("""
@@ -411,6 +414,7 @@ class RandomForestClassifier(DelayedPredictionMixin):
                    str(self.workers)))
 
         futures = list()
+        print(" call the static fit " )
         for w, xc in X_futures.items():
             futures.append(
                 c.submit(

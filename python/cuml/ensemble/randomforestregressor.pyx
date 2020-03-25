@@ -98,6 +98,8 @@ cdef extern from "cuml/ensemble/randomforest.hpp" namespace "ML":
                           double*,
                           bool) except +
 
+    cdef void compare_concat_forest_to_subforests(ModelHandle concat_tree_handle,
+                                                  vector[ModelHandle] &treelite_handles)
 
 class RandomForestRegressor(Base):
 
@@ -362,6 +364,20 @@ class RandomForestRegressor(Base):
         else:
             raise ValueError("Wrong value passed in for max_features"
                              " please read the documentation")
+
+    def _check_concat_forest(self, concat_handle, treelite_handles):
+        print(" CONCAT HANDLE : ", concat_handle)
+        print(" Treelite handles : ", treelite_handles[0])
+        cdef ModelHandle concat_model_handle = <ModelHandle><uintptr_t>concat_handle
+        cdef vector[ModelHandle] *model_handles \
+            = new vector[ModelHandle]()
+        cdef uintptr_t mod_ptr
+        for i in treelite_handles:
+            mod_ptr = <uintptr_t>i
+            model_handles.push_back((
+                <ModelHandle> mod_ptr))
+        compare_concat_forest_to_subforests(concat_model_handle,
+                                            deref(model_handles))
 
     def _obtain_treelite_handle(self):
         task_category = REGRESSION_MODEL

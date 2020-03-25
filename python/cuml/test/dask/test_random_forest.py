@@ -69,7 +69,7 @@ def _prep_training_data(c, X_train, y_train, partitions_per_worker):
                                                        workers=workers)
     return X_train_df, y_train_df
 
-
+"""
 @pytest.mark.parametrize('partitions_per_worker', [1, 3])
 def test_rf_classification_dask(partitions_per_worker, cluster):
 
@@ -164,7 +164,7 @@ def test_rf_throws_exceptions(cluster):
             cu_rf_mg.fit(X_train_df, y_train_df)
     finally:
         c.close()
-
+"""
 
 @pytest.mark.parametrize('partitions_per_worker', [1, 5])
 def test_rf_regression_dask_fil(partitions_per_worker, cluster):

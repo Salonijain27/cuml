@@ -399,6 +399,11 @@ void compare_trees(tl::Tree& tree_from_concatenated_forest,
  */
 void compare_concat_forest_to_subforests(
   ModelHandle concat_tree_handle, std::vector<ModelHandle> treelite_handles) {
+  std::cout << " CONCAT HANDLE IN C++ " << concat_tree_handle << std::flush << std::endl;
+  std::cout << " Single HANDLE IN C++ " << treelite_handles[0] << std::flush << std::endl;
+  std::cout << "& CONCAT HANDLE IN C++ " << & concat_tree_handle << std::flush << std::endl;
+  std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::flush << std::endl;
+
   size_t concat_forest;
   size_t total_num_trees = 0;
   for (int forest_idx = 0; forest_idx < treelite_handles.size(); forest_idx++) {
@@ -457,10 +462,13 @@ ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles) {
     concat_model->trees.insert(concat_model->trees.end(), model.trees.begin(),
                                model.trees.end());
   }
+  std::cout << " Single HANDLE IN C++ CREATE CONCAT MOD : " << treelite_handles[0] << std::flush << std::endl;
   concat_model->num_feature = first_model.num_feature;
   concat_model->num_output_group = first_model.num_output_group;
   concat_model->random_forest_flag = first_model.random_forest_flag;
   concat_model->param = first_model.param;
+  std::cout << " CONCAT HANDLE IN C++ CREATE CONCAT MOD : " << concat_model << std::flush << std::endl;
+  compare_concat_forest_to_subforests(concat_model, treelite_handles);
   return concat_model;
 }
 

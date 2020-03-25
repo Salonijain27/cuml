@@ -62,6 +62,7 @@ class DistributedDataHandler:
 
     def __init__(self, gpu_futures=None, workers=None,
                  datatype=None, multiple=False, client=None):
+        print(" INSIDE THE DistributedDataHandler INIT FUNC ")
         self.client = default_client() if client is None else client
         self.gpu_futures = gpu_futures
         self.worker_to_parts = _workers_to_parts(gpu_futures)
@@ -94,17 +95,18 @@ class DistributedDataHandler:
 
         client : dask.distributedClient
         """
-
+        print(" INSIDE TH E CREATE FUNCTION ")
         client = cls.get_client(client)
-
+        print(" STEP ONE")
         multiple = isinstance(data, Sequence)
-
+        print(" STEP two")
         gpu_futures = client.sync(_extract_partitions, data, client)
+        print(" STEP three ")
         workers = tuple(set(map(lambda x: x[0], gpu_futures)))
-
+        print(" STEP FOUR ")
         datatype = 'cudf' if isinstance(first(data) if multiple else data,
                                         dcDataFrame) else 'cupy'
-
+        print(" THE END OF TH E CREATE FUNCTION ")
         return DistributedDataHandler(gpu_futures=gpu_futures, workers=workers,
                                       datatype=datatype, multiple=multiple,
                                       client=client)
@@ -113,6 +115,10 @@ class DistributedDataHandler:
     #  (just here to keep from breaking everythign)
     @classmethod
     def single(cls, data, client=None):
+        print(" INSIDE THE SINGLE FUNCTION IN DistributedDataHandler ")
+        print(" CLIENT IN SINGLE : ", client)
+        print(" CLS IN SINGLE : ", cls)
+        print(" DATA IN SINGLE : ", data)
         return cls.create(data, client)
 
     @classmethod

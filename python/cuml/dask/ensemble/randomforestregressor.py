@@ -24,6 +24,8 @@ from dask.distributed import default_client, wait
 from cuml.dask.common.base import DelayedPredictionMixin
 from cuml.dask.common.input_utils import DistributedDataHandler
 
+from numba import cuda
+
 import math
 import random
 from uuid import uuid1
@@ -330,6 +332,7 @@ class RandomForestRegressor(DelayedPredictionMixin):
         """
 
         mod_bytes = []
+        print(" DICT VALUES : ", self.client.compute(self.rfs.values()))
         for w in self.workers:
             mod_bytes.append(self.rfs[w].result().model_pbuf_bytes)
         last_worker = w
@@ -337,12 +340,18 @@ class RandomForestRegressor(DelayedPredictionMixin):
         model = self.rfs[last_worker].result()
         for n in range(len(self.workers)):
             all_tl_mod_handles.append(model._tl_model_handles(mod_bytes[n]))
-
+        print(" ALL CONCAT MODEL HANDLES : ", all_tl_mod_handles)
         concat_model_handle = model.concatenate_treelite_handle(
             treelite_handle=all_tl_mod_handles)
-        model.concatenate_model_bytes(concat_model_handle)
-
+        print(" CONCAT MODEL HANDLES : ", concat_model_handle)
+        print(" COMPAR ETHE CONCATENATED TREE WITH THE INDIV INFO ")
+        model._check_concat_forest(concat_model_handle, all_tl_mod_handles)
+        print(" OBTAIN THE CONCAT MODEL PBUF BYTES")
+        #model.concatenate_model_bytes(concat_model_handle)
+        print(model)
+        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ")
         self.local_model = model
+        print(self.local_model)
 
     def fit(self, X, y):
         """
@@ -379,10 +388,12 @@ class RandomForestRegressor(DelayedPredictionMixin):
             y must be partitioned the same way as X
         """
         c = default_client()
-
+        print("TYPE OF X : ", type(X))
+        print(" TYPE OF Y : ", type(y))
+        print(" START CONVERTING X AND Y !!!!!!!!!!!!!!!!!!!!!!!")
         X_futures = workers_to_parts(c.sync(extract_ddf_partitions, X))
         y_futures = workers_to_parts(c.sync(extract_ddf_partitions, y))
-
+        print("PRINT MAKE PARTITIONS WORKER @@@@@@@@@@@@@@@@@@@")
         X_partition_workers = [w for w, xc in X_futures.items()]
         y_partition_workers = [w for w, xc in y_futures.items()]
 
@@ -396,7 +407,7 @@ class RandomForestRegressor(DelayedPredictionMixin):
             """ % (str(X_partition_workers),
                    str(y_partition_workers),
                    str(self.workers)))
-
+        print(" FUTURES RUNNING CALLING FIT FOR CYTHON ###########")
         futures = list()
         for w, xc in X_futures.items():
             futures.append(
@@ -477,12 +488,15 @@ class RandomForestRegressor(DelayedPredictionMixin):
                            convert_dtype=True, fil_sparse_format='auto',
                            delayed=True):
         self._concat_treelite_models()
+        print(" WE ARE BACK TO THE MAIN PREDICT GPU FUNCT FROM CONCAT FUNC ")
         data = DistributedDataHandler.single(X, client=self.client)
+        print(" get the data using dask distributed handle ")
         self.datatype = data.datatype
-
+        print(" data type in DASK CODE : ", self.datatype)
         kwargs = {"convert_dtype": convert_dtype,
                   "predict_model": predict_model, "algo": algo,
                   "fil_sparse_format": fil_sparse_format}
+        print(" CALL THE FUNCTION IN SELF PREDICT USING C AND D'S method")
         return self._predict(X, delayed=delayed, **kwargs)
 
     """
