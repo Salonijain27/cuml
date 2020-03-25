@@ -29,13 +29,14 @@ from dask_cudf.core import DataFrame as dcDataFrame
 
 from dask import delayed
 
+from cuml.dask.common.utils import get_client
 from cuml.dask.common.dask_df_utils import to_dask_cudf
+from cuml.dask.common.dask_arr_utils import validate_dask_array
+from cuml.dask.common.part_utils import _extract_partitions
 from dask.distributed import wait
 from dask.distributed import default_client
-from dask.distributed import futures_of
 from tornado import gen
 from toolz import first
-from dask.array.core import Array as daskArray
 from uuid import uuid1
 
 from functools import reduce
@@ -62,8 +63,8 @@ class DistributedDataHandler:
 
     def __init__(self, gpu_futures=None, workers=None,
                  datatype=None, multiple=False, client=None):
-        print(" INSIDE THE DistributedDataHandler INIT FUNC ")
-        self.client = default_client() if client is None else client
+        print(" INSIDE THE DistributedDataHandler INIT FUNCtion ")
+        self.client = get_client(client)
         self.gpu_futures = gpu_futures
         self.worker_to_parts = _workers_to_parts(gpu_futures)
         self.workers = workers
@@ -99,14 +100,21 @@ class DistributedDataHandler:
         client = cls.get_client(client)
         print(" STEP ONE")
         multiple = isinstance(data, Sequence)
-        print(" STEP two")
-        gpu_futures = client.sync(_extract_partitions, data, client)
-        print(" STEP three ")
-        workers = tuple(set(map(lambda x: x[0], gpu_futures)))
-        print(" STEP FOUR ")
+        print(" STEP two ")
         datatype = 'cudf' if isinstance(first(data) if multiple else data,
                                         dcDataFrame) else 'cupy'
-        print(" THE END OF TH E CREATE FUNCTION ")
+        print(" STEP THREE ")
+        if datatype == 'cupy':
+            if multiple:
+                for d in data:
+                    validate_dask_array(d)
+            else:
+                validate_dask_array(data)
+        print(" STEP FOUR ")
+        gpu_futures = client.sync(_extract_partitions, data, client)
+        print(" STEP FIVR ")
+        workers = tuple(set(map(lambda x: x[0], gpu_futures)))
+        print(" THIS IS THE END OF CREATE FUNC ")
         return DistributedDataHandler(gpu_futures=gpu_futures, workers=workers,
                                       datatype=datatype, multiple=multiple,
                                       client=client)
@@ -211,35 +219,6 @@ def _to_dask_cudf(futures, client=None, verbose=False):
 
 
 """ Internal methods, API subject to change """
-
-
-@gen.coroutine
-def _extract_partitions(dask_obj, client=None):
-
-    client = default_client() if client is None else client
-
-    # dask.dataframe or dask.array
-    if isinstance(dask_obj, dcDataFrame) or \
-            isinstance(dask_obj, daskArray):
-        parts = futures_of(client.compute(dask_obj))
-
-    # iterable of dask collections (need to colocate them)
-    elif isinstance(dask_obj, Sequence):
-        parts = [futures_of(client.compute(a)) for a in dask_obj]
-        to_map = zip(*parts)
-        parts = client.compute(list(map(delayed, to_map)))
-
-    else:
-        raise TypeError("Unsupported dask_obj type: " + type(dask_obj))
-
-    yield wait(parts)
-
-    key_to_part = [(str(part.key), part) for part in parts]
-    who_has = yield client.who_has(parts)
-
-    raise gen.Return([(first(who_has[key]), part)
-                      for key, part in key_to_part])
-
 
 # TODO: This can go away once all remaining estimators are updated
 #  to use _extract_partitions
