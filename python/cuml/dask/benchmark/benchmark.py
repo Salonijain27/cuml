@@ -80,6 +80,7 @@ def _read_data(file_list, n_samples, n_features):
     print(" CONVERT CUPY ARRAY TO CUDF DATAFRAME ")
     if n_features:
         X_df = cudf.DataFrame.from_gpu_matrix(X)
+        del X
     else:
         print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
         print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
@@ -88,11 +89,14 @@ def _read_data(file_list, n_samples, n_features):
         print("Shape of X : ", X.shape[0])
         print("**********************************************")
         X_np = cp.asnumpy(X)
+        del(X)
         print(" TYPE OF X AFTER CONVERSION TO NP : ", type(X_np))
         print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
         X_pd = pd.Series(X_np)
+        del(X_np)
         print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
         X_df = cudf.Series(X_pd)
+        del(X_pd)
         #X = cp.reshape(X, (X.shape[0],1), order='F')
         #print("Shape of X : ", X.shape)
         #X_df = cudf.DataFrame.from_gpu_matrix((X,X))
@@ -157,30 +161,91 @@ def read_data(client, path, n_workers, workers, n_samples, n_features, n_gb, n_s
 
     return X
 
+def _read_data_test(file_list, n_samples, n_features):
+    print(file_list)
+    if n_features:
+        X = cp.zeros((n_samples * len(file_list), n_features), dtype='float32', order='F')
+        for i in range(len(file_list)):
+            X[i * n_samples: (i + 1) * n_samples, :] = cp.load(file_list[i])[:n_samples, :]
+    else:
+        X = cp.zeros((n_samples * len(file_list), ), dtype='float32', order='F')
+        for i in range(len(file_list)):
+            X[i * n_samples: (i + 1) * n_samples] = cp.load(file_list[i])[:n_samples]
+
+    print(X.shape)
+    print(X.strides)
+    print(X.flags)
+    # X = cp.concatenate(X, axis=0)
+    # X = cp.array(X, order='F')
+    # del X
+    return X
+
+
+def read_data_test(client, path, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb, gb_partitions=None):
+    total_file_list = os.listdir(path)
+    total_file_list = [path + '/' + tfl for tfl in total_file_list]
+    print(" Number of features : ", n_features)
+    if gb_partitions:
+        if len(gb_partitions) == n_workers - 1:
+            file_list = total_file_list[:n_gb] if n_gb > n_workers else total_file_list[:n_workers]
+            file_list = np.split(np.asarray(file_list), gb_partitions)
+    elif n_gb:
+        if n_gb < n_workers:
+            file_list = total_file_list[:n_workers]
+        elif n_gb % n_workers == 0:
+            file_list = total_file_list[:n_gb]
+        file_list = np.split(np.asarray(file_list), n_workers)
+    else:
+        file_list = total_file_list[:n_workers]
+        file_list = np.split(np.asarray(file_list), n_workers)
+    print(file_list)
+    
+    if n_gb < n_workers:
+        n_samples_per_worker = int(n_samples / n_workers)
+        X = [client.submit(_read_data, [file_list[i][0]], n_samples_per_worker, n_features, workers=[workers[i]]) for i in range(n_workers)]
+    else:
+        X = [client.submit(_read_data, file_list[i], n_samples_per_gb, n_features, workers=[workers[i]]) for i in range(n_workers)]
+
+    wait([X])
+
+    if n_features:
+        X = [da.from_delayed(dask.delayed(x), meta=cp.zeros(1, dtype=cp.float32),
+            shape=(np.nan, n_features),
+            dtype=cp.float32) for x in X]
+    else:
+        X = [da.from_delayed(dask.delayed(x), meta=cp.zeros(1, dtype=cp.float32),
+            shape=(np.nan, ),
+            dtype=cp.float32) for x in X] 
+    X = da.concatenate(X, axis=0, allow_unknown_chunksizes=True)
+    print(" shape of X : ", X.shape)
+
+    return X
+
+
 def _mse(ytest, yhat):
-    print(" INSIDE THE _MSE FUNC ")
-    print(" TYPE OF DATA IN  YTEST : ", type(ytest))
-    print(" TYPE OF DATA IN  YHAT : ", type(yhat))
     if ytest.shape == yhat.shape:
+        print(" returning a value :")
         return (cp.mean((ytest - yhat) ** 2), ytest.shape[0])
     else:
         print("sorry")
 
 
 def dask_mse(ytest, yhat, client, workers):
-    print(" DASK MSE CALC FUNCTION ")
-    print(" TYPE OF YTEST :  ", type(ytest))
-    print(" TYPE OF Y HAT/ PREDS : ", type(yhat))
-    #ytest_parts = client.sync(extract_arr_partitions, ytest, client)
-    #print(" GOT THE Y_TEST PARTS ")
-    #yhat_parts = client.sync(extract_arr_partitions, yhat, client)
-    print(" GOT THE PREDS PARTS ")
-    print(" CALLING THE INTERNAL _MSE FUNCTION ")
-    mse_parts = np.asarray([client.submit(_mse, ytest, yhat_parts).result()])
-    print(" CALC THE MSE OF EVERYTHING ")
-    #mse_parts[:, 0] = mse_parts[:, 0] * mse_parts[:, 1]
-    #return np.sum(mse_parts[:, 0]) / np.sum(mse_parts[:, 1])
-    return 0
+    print(" type of data in ytest : ", type(ytest))
+    print(" type of data in yhat : ", type(yhat))
+    print(" type of data in ytest : ", ytest)
+    print(" type of data in yhat : ", yhat.compute())
+    print(" check step one :")
+    ytest_parts = client.sync(extract_arr_partitions, ytest, client)
+    print(ytest_parts)
+    print(" check step 2 :")
+    yhat_parts = client.sync(extract_arr_partitions, yhat, client)
+    print(" check step 3 :")
+    mse_parts = np.asarray([client.submit(_mse, ytest_parts[i][1], yhat_parts[i][1]).result() for i in range(len(ytest_parts))])
+    print(" check step four :")
+    mse_parts[:, 0] = mse_parts[:, 0] * mse_parts[:, 1]
+    print(" check step 5 :")
+    return np.sum(mse_parts[:, 0]) / np.sum(mse_parts[:, 1])
 
 
 def set_alloc():
@@ -211,19 +276,16 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features,n_pa
     
                 n_samples = int(n_points / n_features)
                 n_samples_per_gb = int(n_samples / n_gb)
-                # X, y = make_regression(n_samples=n_samples, n_features=n_features, n_informative=n_features / 10, n_parts=n_workers)
-
-                # X = X.rechunk((n_samples / n_workers, n_features))
-                # y = y.rechunk(n_samples / n_workers )
 
                 X = read_data(client, X_filepath, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb)
-                #print(X.compute_chunk_sizes().chunks)
                 wait(X)
-
-                #print(" FINAL TYPE OF X RETURNED : ", type(X))
+                X_test = read_data_test(client, X_filepath, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb)
+                print(X_test.compute_chunk_sizes().chunks)
+                print(" X_test shape : ", X_test.shape)
+                print(X_test.compute_chunk_sizes().chunks)
+                print("******************************************************")
+                print("******************************************************")
                 y = read_data(client, y_filepath, n_workers, workers, n_samples, None, n_gb, n_samples_per_gb)
-                #print(y.compute_chunk_sizes().chunks)
-                #print(" FINAL TYPE OF y RETURNED : ", type(y))
                 wait(y)
 
                 rfr = RandomForestRegressor(max_depth=16)
@@ -246,25 +308,30 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features,n_pa
                 print(" FREE MEMORY AFTER FIT : ", free_mem_2)
                 print(" CPU MEMORY AFTER FIT : ", psutil.cpu_percent())
                 print(" CPU MEMORY ALL INFO AS DICT AFTER : ", dict(psutil.virtual_memory()._asdict()))
-
+                client.cancel(X)
+                client.cancel(y)
                 start_pred_time = time()
                 print(" Start PREDICTION ")
-                preds = rfr.predict(X, predict_model='GPU')
+                preds = rfr.predict(X_test, predict_model='GPU')
+                print(" Type of preds in benchmark : ", type(preds))
                 print("preds : ", preds)
+                print(" shape of preds in benchmarks : ", preds.shape)
                 print(" FINISH PREDS ")
-                #parts = client.sync(extract_arr_partitions, preds, client)
+                #print("type of preds after compute : ", type(preds.compute()))
+                print(" FINISH PREaaDS ")
                 print(" GET PARTS FROM PREDS $$$$$$$$$$$$$")
-                wait(preds)
-                # wait(client.compute(preds))
-                #mse = calc_mse
+                #wait(preds)
                 print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
                 print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
                 end_pred_time = time()
-                print("nGPUS: ", n_workers, ", Shape: ", X.shape, ", Predict Time: ", end_pred_time - start_pred_time)
+                client.cancel(X_test)
+                y_test = read_data_test(client, y_filepath, n_workers, workers, n_samples, None, n_gb, n_samples_per_gb)
+                print(y_test.compute_chunk_sizes().chunks)
+                print("nGPUS: ", n_workers, ", Shape: ", X_test.shape, ", Predict Time: ", end_pred_time - start_pred_time)
                 pred_time[i] = end_pred_time - start_pred_time
                 print(" CHECK TH MSE VALUE OF PREDS RFR ")
-                #print(cp.mean((ytest - yhat) ** 2), ytest.shape[0])
-                mse[i] = dask_mse(y, preds, client, workers)
+                mse[i] = dask_mse(y_test, preds, client, workers)
+                client.cancel(y_test)
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 print(mse[i])
 

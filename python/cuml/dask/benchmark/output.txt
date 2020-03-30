@@ -1,0 +1,898 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ Single HANDLE IN C++ CREATE CONCAT MOD : 0x55db7f4b3630
+ CONCAT HANDLE IN C++ CREATE CONCAT MOD : 0x55dba49c70a0
+ CONCAT HANDLE IN C++ 0x55dba49c70a0
+ Single HANDLE IN C++ 0x55db7f4b3630
+& CONCAT HANDLE IN C++ 0x7ffee3ba7a78
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ CONCAT HANDLE IN C++ 0x55dba49c70a0
+ Single HANDLE IN C++ 0x55db7f4b3630
+& CONCAT HANDLE IN C++ 0x7ffee3ba7ad8
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+/gpfs/fs1/saljain/miniconda3/envs/cuml_dev/lib/python3.7/site-packages/cuml/dask/ensemble/randomforestregressor.py:281: UserWarning: Setting the random seed does not fully guarantee the exact same results at this time.
+  seed=seed,
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f53e032dd10>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(391.85962, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+/gpfs/fs1/saljain/miniconda3/envs/cuml_dev/lib/python3.7/site-packages/cuml/dask/ensemble/randomforestregressor.py:281: UserWarning: Setting the random seed does not fully guarantee the exact same results at this time.
+  seed=seed,
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f937430d730>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(-343.82513, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+['tcp://127.0.0.1:35687', 'tcp://127.0.0.1:40269']
+[array(['/gpfs/fs1/saljain/data/data-1000/X/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/X/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f2805d65190>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  12285575168
+ CPU MEMORY BEFORE FIT :  1.5
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 521980084224, 'percent': 3.5, 'used': 11884630016, 'free': 523524956160, 'active': 3830579200, 'inactive': 2504880128, 'buffers': 11980800, 'cached': 5522026496, 'shared': 2183233536, 'slab': 6348521472}
+ START FITTING THE  MODEL
+TYPE OF X :  <class 'dask_cudf.core.DataFrame'>
+ TYPE OF Y :  <class 'dask_cudf.core.Series'>
+ START CONVERTING X AND Y !!!!!!!!!!!!!!!!!!!!!!!
+PRINT MAKE PARTITIONS WORKER @@@@@@@@@@@@@@@@@@@
+ FUTURES RUNNING CALLING FIT FOR CYTHON ###########
+ FINISH FIT 
+nGPUS:  2 , Shape:  (Delayed('int-1c537c21-b474-4050-8224-5a6d08e988c7'), 1000) , Fit Time:  48.94907307624817
+ FREE MEMORY AFTER FIT :  12285575168
+ CPU MEMORY AFTER FIT :  8.3
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 521944547328, 'percent': 3.5, 'used': 11917258752, 'free': 523487010816, 'active': 3871535104, 'inactive': 2503983104, 'buffers': 12025856, 'cached': 5527298048, 'shared': 2183749632, 'slab': 6352519168}
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+((750000, 750000),)
+ Start PREDICTION 
+ DICT VALUES :  dict_values([<Future: finished, type: cuml.RandomForestRegressor, key: 9bc8af6e-70b7-11ea-8a47-a81e84c35f23-0>, <Future: finished, type: cuml.RandomForestRegressor, key: 9bc8af6e-70b7-11ea-8a47-a81e84c35f23-1>])
+ ALL CONCAT MODEL HANDLES :  [94401221834288, 94401221831648]
+ CONCAT MODEL HANDLES :  94401847914656
+ COMPAR ETHE CONCATENATED TREE WITH THE INDIV INFO 
+ CONCAT HANDLE :  94401847914656
+ Treelite handles :  94401221834288
+ OBTAIN THE CONCAT MODEL PBUF BYTES
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ee7bdbd0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ee7bdbd0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+ WE ARE BACK TO THE MAIN PREDICT GPU FUNCT FROM CONCAT FUNC 
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:46343' processes=2 threads=2, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(1500000,), dtype=float32, chunksize=(750000,), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+ get the data using dask distributed handle 
+ data type in DASK CODE :  cupy
+ CALL THE FUNCTION IN SELF PREDICT USING C AND D'S method
+preds :  dask.array<concatenate, shape=(nan,), dtype=float32, chunksize=(nan,), chunktype=cupy.ndarray>
+ FINISH PREaaDS 
+ GET PARTS FROM PREDS $$$$$$$$$$$$$
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+nGPUS:  2 , Shape:  (Delayed('int-e551df03-e96e-46f0-a61e-26616f65524f'), 1000) , Predict Time:  3.5451178550720215
+ CHECK TH MSE VALUE OF PREDS RFR 
+generator raised StopIteration
+['tcp://127.0.0.1:35687', 'tcp://127.0.0.1:40269']
+[array(['/gpfs/fs1/saljain/data/data-1000/X/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/X/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f2804426310>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  12281380864
+ CPU MEMORY BEFORE FIT :  2.0
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 520221167616, 'percent': 3.8, 'used': 13589737472, 'free': 521712246784, 'active': 5539434496, 'inactive': 2599698432, 'buffers': 12640256, 'cached': 5628968960, 'shared': 2183299072, 'slab': 6358081536}
+ START FITTING THE  MODEL
+TYPE OF X :  <class 'dask_cudf.core.DataFrame'>
+ TYPE OF Y :  <class 'dask_cudf.core.Series'>
+ START CONVERTING X AND Y !!!!!!!!!!!!!!!!!!!!!!!
+PRINT MAKE PARTITIONS WORKER @@@@@@@@@@@@@@@@@@@
+ FUTURES RUNNING CALLING FIT FOR CYTHON ###########
+ FINISH FIT 
+nGPUS:  2 , Shape:  (Delayed('int-d5ec98da-4ce6-4c9a-ae48-8a616845b100'), 1000) , Fit Time:  48.582497358322144
+ FREE MEMORY AFTER FIT :  12281380864
+ CPU MEMORY AFTER FIT :  8.3
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 520204386304, 'percent': 3.8, 'used': 13605384192, 'free': 521695264768, 'active': 5557592064, 'inactive': 2600443904, 'buffers': 12701696, 'cached': 5630242816, 'shared': 2184249344, 'slab': 6357491712}
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')] Single HANDLE IN C++ CREATE CONCAT MOD : 0x55dbb0a48340
+ CONCAT HANDLE IN C++ CREATE CONCAT MOD : 0x55dbb0a46e20
+ CONCAT HANDLE IN C++ 0x55dbb0a46e20
+ Single HANDLE IN C++ 0x55dbb0a48340
+& CONCAT HANDLE IN C++ 0x7ffee3ba7a78
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ CONCAT HANDLE IN C++ 0x55dbb0a46e20
+ Single HANDLE IN C++ 0x55dbb0a48340
+& CONCAT HANDLE IN C++ 0x7ffee3ba7ad8
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f53e03ecd10>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(-343.82513, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f93743ae250>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(391.85962, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+ Single HANDLE IN C++ CREATE CONCAT MOD : 0x55dbb04b8590
+ CONCAT HANDLE IN C++ CREATE CONCAT MOD : 0x55dbb0a2bd00
+ CONCAT HANDLE IN C++ 0x55dbb0a2bd00
+ Single HANDLE IN C++ 0x55dbb04b8590
+& CONCAT HANDLE IN C++ 0x7ffee3ba7a78
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ CONCAT HANDLE IN C++ 0x55dbb0a2bd00
+ Single HANDLE IN C++ 0x55dbb04b8590
+& CONCAT HANDLE IN C++ 0x7ffee3ba7ad8
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+((750000, 750000),)
+ Start PREDICTION 
+ DICT VALUES :  dict_values([<Future: finished, type: cuml.RandomForestRegressor, key: be3c7670-70b7-11ea-8a47-a81e84c35f23-0>, <Future: finished, type: cuml.RandomForestRegressor, key: be3c7670-70b7-11ea-8a47-a81e84c35f23-1>])
+ ALL CONCAT MODEL HANDLES :  [94402049770304, 94402049761056]
+ CONCAT MODEL HANDLES :  94402049764896
+ COMPAR ETHE CONCATENATED TREE WITH THE INDIV INFO 
+ CONCAT HANDLE :  94402049764896
+ Treelite handles :  94402049770304
+ OBTAIN THE CONCAT MODEL PBUF BYTES
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ececacd0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ececacd0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+ WE ARE BACK TO THE MAIN PREDICT GPU FUNCT FROM CONCAT FUNC 
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:46343' processes=2 threads=2, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(1500000,), dtype=float32, chunksize=(750000,), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+ get the data using dask distributed handle 
+ data type in DASK CODE :  cupy
+ CALL THE FUNCTION IN SELF PREDICT USING C AND D'S method
+preds :  dask.array<concatenate, shape=(nan,), dtype=float32, chunksize=(nan,), chunktype=cupy.ndarray>
+ FINISH PREaaDS 
+ GET PARTS FROM PREDS $$$$$$$$$$$$$
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+nGPUS:  2 , Shape:  (Delayed('int-0f324576-5f8d-4766-b677-0c6f995ce0de'), 1000) , Predict Time:  3.6013646125793457
+ CHECK TH MSE VALUE OF PREDS RFR 
+generator raised StopIteration
+['tcp://127.0.0.1:35687', 'tcp://127.0.0.1:40269']
+[array(['/gpfs/fs1/saljain/data/data-1000/X/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/X/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f280442aad0>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  12281380864
+ CPU MEMORY BEFORE FIT :  1.9
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 519251763200, 'percent': 4.0, 'used': 14508494848, 'free': 520692224000, 'active': 6460854272, 'inactive': 2695897088, 'buffers': 13156352, 'cached': 5729718272, 'shared': 2183299072, 'slab': 6360539136}
+ START FITTING THE  MODEL
+TYPE OF X :  <class 'dask_cudf.core.DataFrame'>
+ TYPE OF Y :  <class 'dask_cudf.core.Series'>
+ START CONVERTING X AND Y !!!!!!!!!!!!!!!!!!!!!!!
+PRINT MAKE PARTITIONS WORKER @@@@@@@@@@@@@@@@@@@
+ FUTURES RUNNING CALLING FIT FOR CYTHON ###########
+ FINISH FIT 
+nGPUS:  2 , Shape:  (Delayed('int-5187c63e-357f-4285-a4a8-4533f2412e8f'), 1000) , Fit Time:  48.737839698791504
+ FREE MEMORY AFTER FIT :  12281380864
+ CPU MEMORY AFTER FIT :  8.3
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 519234379776, 'percent': 4.0, 'used': 14525947904, 'free': 520674906112, 'active': 6479417344, 'inactive': 2695856128, 'buffers': 13201408, 'cached': 5729538048, 'shared': 2183352320, 'slab': 6361944064}
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+((750000, 750000),)
+ Start PREDICTION 
+ DICT VALUES :  dict_values([<Future: finished, type: cuml.RandomForestRegressor, key: e08f5080-70b7-11ea-8a47-a81e84c35f23-0>, <Future: finished, type: cuml.RandomForestRegressor, key: e08f5080-70b7-11ea-8a47-a81e84c35f23-1>])
+ ALL CONCAT MODEL HANDLES :  [94402043938192, 94402049657520]
+ CONCAT MODEL HANDLES :  94402049654016
+ COMPAR ETHE CONCATENATED TREE WITH THE INDIV INFO 
+ CONCAT HANDLE :  94402049654016
+ Treelite handles :  94402043938192
+ OBTAIN THE CONCAT MODEL PBUF BYTES
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ece96bf0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ece96bf0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+ WE ARE BACK TO THE MAIN PREDICT GPU FUNCT FROM CONCAT FUNC 
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:46343' processes=2 threads=2, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(1500000,), dtype=float32, chunksize=(750000,), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+ get the data using dask distributed handle 
+ data type in DASK CODE :  cupy
+ CALL THE FUNCTION IN SELF PREDICT USING C AND D'S method
+preds :  dask.array<concatenate, shape=(nan,), dtype=float32, chunksize=(nan,), chunktype=cupy.ndarray>
+ FINISH PREaaDS 
+ GET PARTS FROM PREDS $$$$$$$$$$$$$
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f93740a39b0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(391.85962, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f53e03cd330>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(-343.82513, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')] Single HANDLE IN C++ CREATE CONCAT MOD : 0x55dbb0a2d060
+ CONCAT HANDLE IN C++ CREATE CONCAT MOD : 0x7f27f80947b0
+ CONCAT HANDLE IN C++ 0x7f27f80947b0
+ Single HANDLE IN C++ 0x55dbb0a2d060
+& CONCAT HANDLE IN C++ 0x7ffee3ba7a78
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ CONCAT HANDLE IN C++ 0x7f27f80947b0
+ Single HANDLE IN C++ 0x55dbb0a2d060
+& CONCAT HANDLE IN C++ 0x7ffee3ba7ad8
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f93600df390>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(391.85962, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f53e036c350>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(-343.82513, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+
+nGPUS:  2 , Shape:  (Delayed('int-127f6244-69c6-4684-b6f1-0e9b0312ab3e'), 1000) , Predict Time:  3.4533851146698
+ CHECK TH MSE VALUE OF PREDS RFR 
+generator raised StopIteration
+['tcp://127.0.0.1:35687', 'tcp://127.0.0.1:40269']
+[array(['/gpfs/fs1/saljain/data/data-1000/X/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/X/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f27ee733b50>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  12281380864
+ CPU MEMORY BEFORE FIT :  1.9
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 518369742848, 'percent': 4.2, 'used': 15340158976, 'free': 519759851520, 'active': 7288782848, 'inactive': 2792099840, 'buffers': 13639680, 'cached': 5829943296, 'shared': 2183299072, 'slab': 6365720576}
+ START FITTING THE  MODEL
+TYPE OF X :  <class 'dask_cudf.core.DataFrame'>
+ TYPE OF Y :  <class 'dask_cudf.core.Series'>
+ START CONVERTING X AND Y !!!!!!!!!!!!!!!!!!!!!!!
+PRINT MAKE PARTITIONS WORKER @@@@@@@@@@@@@@@@@@@
+ FUTURES RUNNING CALLING FIT FOR CYTHON ###########
+ FINISH FIT 
+nGPUS:  2 , Shape:  (Delayed('int-a21182f7-25a2-4cf6-a2d1-3bd190604acc'), 1000) , Fit Time:  48.81138801574707
+ FREE MEMORY AFTER FIT :  12281380864
+ CPU MEMORY AFTER FIT :  8.3
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 518355361792, 'percent': 4.2, 'used': 15354667008, 'free': 519745810432, 'active': 7304568832, 'inactive': 2792275968, 'buffers': 13676544, 'cached': 5829439488, 'shared': 2183553024, 'slab': 6366363648}
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+((750000, 750000),)
+ Start PREDICTION 
+ DICT VALUES :  dict_values([<Future: finished, type: cuml.RandomForestRegressor, key: 02ee02c0-70b8-11ea-8a47-a81e84c35f23-0>, <Future: finished, type: cuml.RandomForestRegressor, key: 02ee02c0-70b8-11ea-8a47-a81e84c35f23-1>])
+ ALL CONCAT MODEL HANDLES :  [94402049658976, 94402043935648]
+ CONCAT MODEL HANDLES :  139809641809840
+ COMPAR ETHE CONCATENATED TREE WITH THE INDIV INFO 
+ CONCAT HANDLE :  139809641809840
+ Treelite handles :  94402049658976
+ OBTAIN THE CONCAT MODEL PBUF BYTES
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ec9c3690>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ec9c3690>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+ WE ARE BACK TO THE MAIN PREDICT GPU FUNCT FROM CONCAT FUNC 
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:46343' processes=2 threads=2, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(1500000,), dtype=float32, chunksize=(750000,), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+ get the data using dask distributed handle 
+ data type in DASK CODE :  cupy
+ CALL THE FUNCTION IN SELF PREDICT USING C AND D'S method
+preds :  dask.array<concatenate, shape=(nan,), dtype=float32, chunksize=(nan,), chunktype=cupy.ndarray>
+ FINISH PREaaDS 
+ GET PARTS FROM PREDS $$$$$$$$$$$$$
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+nGPUS:  2 , Shape:  (Delayed('int-cc3bf6b0-e1ad-490d-84be-73bab4cac2b5'), 1000) , Predict Time:  3.5893094539642334
+ CHECK TH MSE VALUE OF PREDS RFR 
+generator raised StopIteration
+['tcp://127.0.0.1:35687', 'tcp://127.0.0.1:40269']
+[array(['/gpfs/fs1/saljain/data/data-1000/X/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/X/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f2804542690>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  12281380864
+ CPU MEMORY BEFORE FIT :  1.9
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 517494329344, 'percent': 4.3, 'used': 16165371904, 'free': 518834237440, 'active': 8112197632, 'inactive': 2888310784, 'buffers': 14082048, 'cached': 5929902080, 'shared': 2183299072, 'slab': 6370471936}
+ START FITTING THE  MODEL
+TYPE OF X :  <class 'dask_cudf.core.DataFrame'>
+ TYPE OF Y :  <class 'dask_cudf.core.Series'>
+ START CONVERTING X AND Y !!!!!!!!!!!!!!!!!!!!!!!
+PRINT MAKE PARTITIONS WORKER @@@@@@@@@@@@@@@@@@@
+ FUTURES RUNNING CALLING FIT FOR CYTHON ###########
+ FINISH FIT 
+nGPUS:  2 , Shape:  (Delayed('int-1ceb6c4f-76e0-4e82-bf96-9db74f38d488'), 1000) , Fit Time:  49.03476858139038
+ FREE MEMORY AFTER FIT :  12281380864
+ CPU MEMORY AFTER FIT :  8.3
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 517481689088, 'percent': 4.3, 'used': 16178253824, 'free': 518822207488, 'active': 8127287296, 'inactive': 2888052736, 'buffers': 14131200, 'cached': 5929000960, 'shared': 2183749632, 'slab': 6369136640}
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')] Single HANDLE IN C++ CREATE CONCAT MOD : 0x7f2800420130
+ CONCAT HANDLE IN C++ CREATE CONCAT MOD : 0x55dbb0a34ef0
+ CONCAT HANDLE IN C++ 0x55dbb0a34ef0
+ Single HANDLE IN C++ 0x7f2800420130
+& CONCAT HANDLE IN C++ 0x7ffee3ba7a78
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ CONCAT HANDLE IN C++ 0x55dbb0a34ef0
+ Single HANDLE IN C++ 0x7f2800420130
+& CONCAT HANDLE IN C++ 0x7ffee3ba7ad8
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f53e032ded0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(-343.82513, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f937435d310>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(391.85962, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+ Single HANDLE IN C++ CREATE CONCAT MOD : 0x55dbb04bbae0
+ CONCAT HANDLE IN C++ CREATE CONCAT MOD : 0x55dbb0a351a0
+ CONCAT HANDLE IN C++ 0x55dbb0a351a0
+ Single HANDLE IN C++ 0x55dbb04bbae0
+& CONCAT HANDLE IN C++ 0x7ffee3ba7a78
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ CONCAT HANDLE IN C++ 0x55dbb0a351a0
+ Single HANDLE IN C++ 0x55dbb04bbae0
+& CONCAT HANDLE IN C++ 0x7ffee3ba7ad8
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+((750000, 750000),)
+ Start PREDICTION 
+ DICT VALUES :  dict_values([<Future: finished, type: cuml.RandomForestRegressor, key: 25434588-70b8-11ea-8a47-a81e84c35f23-0>, <Future: finished, type: cuml.RandomForestRegressor, key: 25434588-70b8-11ea-8a47-a81e84c35f23-1>])
+ ALL CONCAT MODEL HANDLES :  [139809779745072, 94402043936336]
+ CONCAT MODEL HANDLES :  94402049691376
+ COMPAR ETHE CONCATENATED TREE WITH THE INDIV INFO 
+ CONCAT HANDLE :  94402049691376
+ Treelite handles :  139809779745072
+ OBTAIN THE CONCAT MODEL PBUF BYTES
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ecbaebb0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ecbaebb0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+ WE ARE BACK TO THE MAIN PREDICT GPU FUNCT FROM CONCAT FUNC 
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:46343' processes=2 threads=2, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(1500000,), dtype=float32, chunksize=(750000,), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+ get the data using dask distributed handle 
+ data type in DASK CODE :  cupy
+ CALL THE FUNCTION IN SELF PREDICT USING C AND D'S method
+preds :  dask.array<concatenate, shape=(nan,), dtype=float32, chunksize=(nan,), chunktype=cupy.ndarray>
+ FINISH PREaaDS 
+ GET PARTS FROM PREDS $$$$$$$$$$$$$
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+nGPUS:  2 , Shape:  (Delayed('int-0780ea77-4342-45cb-a9ad-23156d15030a'), 1000) , Predict Time:  3.576819658279419
+ CHECK TH MSE VALUE OF PREDS RFR 
+generator raised StopIteration
+['tcp://127.0.0.1:35687', 'tcp://127.0.0.1:40269']
+[array(['/gpfs/fs1/saljain/data/data-1000/X/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/X/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/X/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f28044055d0>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  12281380864
+ CPU MEMORY BEFORE FIT :  1.9
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 516559998976, 'percent': 4.5, 'used': 17049804800, 'free': 517849944064, 'active': 8996589568, 'inactive': 2983809024, 'buffers': 14581760, 'cached': 6029262848, 'shared': 2183299072, 'slab': 6373924864}
+ START FITTING THE  MODEL
+TYPE OF X :  <class 'dask_cudf.core.DataFrame'>
+ TYPE OF Y :  <class 'dask_cudf.core.Series'>
+ START CONVERTING X AND Y !!!!!!!!!!!!!!!!!!!!!!!
+PRINT MAKE PARTITIONS WORKER @@@@@@@@@@@@@@@@@@@
+ FUTURES RUNNING CALLING FIT FOR CYTHON ###########
+ FINISH FIT 
+nGPUS:  2 , Shape:  (Delayed('int-d42e9d1a-f730-4357-afb4-017d6d3b323b'), 1000) , Fit Time:  48.84600257873535
+ FREE MEMORY AFTER FIT :  12281380864
+ CPU MEMORY AFTER FIT :  8.3
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 516549570560, 'percent': 4.5, 'used': 17059352576, 'free': 517838651392, 'active': 9011261440, 'inactive': 2985996288, 'buffers': 14622720, 'cached': 6030966784, 'shared': 2183323648, 'slab': 6374912000}
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]
+((750000, 750000),)
+ Start PREDICTION 
+ DICT VALUES :  dict_values([<Future: finished, type: cuml.RandomForestRegressor, key: 47ddc9f6-70b8-11ea-8a47-a81e84c35f23-0>, <Future: finished, type: cuml.RandomForestRegressor, key: 47ddc9f6-70b8-11ea-8a47-a81e84c35f23-1>])
+ ALL CONCAT MODEL HANDLES :  [94402043951840, 139809641977392]
+ CONCAT MODEL HANDLES :  94402049692064
+ COMPAR ETHE CONCATENATED TREE WITH THE INDIV INFO 
+ CONCAT HANDLE :  94402049692064
+ Treelite handles :  94402043951840
+ OBTAIN THE CONCAT MODEL PBUF BYTES
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ece48f10>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f27ece48f10>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5)
+ WE ARE BACK TO THE MAIN PREDICT GPU FUNCT FROM CONCAT FUNC 
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:46343' processes=2 threads=2, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(1500000,), dtype=float32, chunksize=(750000,), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+ get the data using dask distributed handle 
+ data type in DASK CODE :  cupy
+ CALL THE FUNCTION IN SELF PREDICT USING C AND D'S method
+preds :  dask.array<concatenate, shape=(nan,), dtype=float32, chunksize=(nan,), chunktype=cupy.ndarray>
+ FINISH PREaaDS 
+ GET PARTS FROM PREDS $$$$$$$$$$$$$
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[array(['/gpfs/fs1/saljain/data/data-1000/y/14.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/16.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/10.npy'], dtype='<U41'), array(['/gpfs/fs1/saljain/data/data-1000/y/19.npy',
+       '/gpfs/fs1/saljain/data/data-1000/y/13.npy',
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f53cc683ef0>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(-343.82513, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+distributed.worker - WARNING -  Compute Failed
+Function:  _predict_func
+args:      (RandomForestRegressor(n_estimators=5, max_depth=16, handle=<cuml.common.handle.Handle object at 0x7f93283a8550>, max_features='auto', n_bins=8, n_streams=4, split_algo=1, split_criterion=2, bootstrap=True, bootstrap_features=False, verbose=False, min_rows_per_node=2, rows_sample=1.0, max_leaves=-1, accuracy_metric='mse', output_type='cudf', min_impurity_decrease=0.0, quantile_per_tree=False, seed=5), array(391.85962, dtype=float32))
+kwargs:    {}
+Exception: IndexError('tuple index out of range')
+
+       '/gpfs/fs1/saljain/data/data-1000/y/9.npy'], dtype='<U41')]['/gpfs/fs1/saljain/data/data-1000/X/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/y/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/9.npy']
+(750000,)
+(4,)
+  C_CONTIGUOUS : True
+  F_CONTIGUOUS : True
+  OWNDATA : True
+['/gpfs/fs1/saljain/data/data-1000/y/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/9.npy']
+(750000,)
+(4,)
+  C_CONTIGUOUS : True
+  F_CONTIGUOUS : True
+  OWNDATA : True
+['/gpfs/fs1/saljain/data/data-1000/X/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/19.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/13.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/9.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/y/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/10.npy']
+(750000,)
+(4,)
+  C_CONTIGUOUS : True
+  F_CONTIGUOUS : True
+  OWNDATA : True
+['/gpfs/fs1/saljain/data/data-1000/y/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/10.npy']
+(750000,)
+(4,)
+  C_CONTIGUOUS : True
+  F_CONTIGUOUS : True
+  OWNDATA : True
+['/gpfs/fs1/saljain/data/data-1000/X/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+['/gpfs/fs1/saljain/data/data-1000/X/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/X/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000, 1000)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.dataframe.DataFrame'>
+['/gpfs/fs1/saljain/data/data-1000/y/14.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/16.npy'
+ '/gpfs/fs1/saljain/data/data-1000/y/10.npy']
+ SHAPE OF X BEFORE CUDF DATAFRAME :  (750000,)
+ CONVERT CUPY ARRAY TO CUDF DATAFRAME 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shape of X :  750000
+**********************************************
+ TYPE OF X AFTER CONVERSION TO NP :  <class 'numpy.ndarray'>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ TYPE OF DATA AFTER CONVERSION :  <class 'cudf.core.series.Series'>
+
+nGPUS:  2 , Shape:  (Delayed('int-1a4ec50f-3d88-44d2-b05d-cb927d9c6ecc'), 1000) , Predict Time:  3.4549078941345215
+ CHECK TH MSE VALUE OF PREDS RFR 
+generator raised StopIteration
+starting write
+2,1500000,1000,48.94907307624817,48.80249924659729,48.582497358322144,0.02170045639528325,3.535157346725464,3.4533851146698,0.004435654710155177,0.0
+ending write

@@ -630,6 +630,9 @@ class RandomForestRegressor(Base):
 
         preds = tl_to_fil_model.predict(X, out_type)
         tl.free_treelite_model(treelite_handle)
+        print(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
+        print(" PREDS IN CYTHON : ", preds)
+        print(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
         return preds
 
     def _predict_model_on_cpu(self, X, convert_dtype):
