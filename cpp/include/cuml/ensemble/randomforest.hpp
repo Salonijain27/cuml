@@ -135,10 +135,11 @@ typedef RandomForestMetaData<double, int> RandomForestClassifierD;
 
 void fit(const cumlHandle& user_handle, RandomForestClassifierF*& forest,
          float* input, int n_rows, int n_cols, int* labels, int n_unique_labels,
-         RF_params rf_params);
+         RF_params rf_params, ModelHandle* model, int task_category);
 void fit(const cumlHandle& user_handle, RandomForestClassifierD*& forest,
          double* input, int n_rows, int n_cols, int* labels,
-         int n_unique_labels, RF_params rf_params);
+         int n_unique_labels, RF_params rf_params, ModelHandle* model,
+         int task_category);
 
 void predict(const cumlHandle& user_handle,
              const RandomForestClassifierF* forest, const float* input,

@@ -164,7 +164,8 @@ template <typename T>
 void rfClassifier<T>::fit(const cumlHandle& user_handle, const T* input,
                           int n_rows, int n_cols, int* labels,
                           int n_unique_labels,
-                          RandomForestMetaData<T, int>*& forest) {
+                          RandomForestMetaData<T, int>*& forest,
+                          ModelHandle* model, int task_category) {
   this->error_checking(input, labels, n_rows, n_cols, false);
 
   const cumlHandle_impl& handle = user_handle.getImpl();
@@ -209,6 +210,13 @@ void rfClassifier<T>::fit(const cumlHandle& user_handle, const T* input,
              this->rf_params.tree_params.n_bins * n_cols * sizeof(T));
     }
   }
+  int random_forest_flag = 1;
+  ModelBuilderHandle model_builder;
+  // num_output_group is 1 for binary classification and regression
+  // num_output_group is #class for multiclass classification which is the same as task_category
+  int num_output_group = task_category > 2 ? task_category : 1;
+  TREELITE_CHECK(TreeliteCreateModelBuilder(
+    n_cols, num_output_group, random_forest_flag, &model_builder));
 
 #pragma omp parallel for num_threads(n_streams)
   for (int i = 0; i < this->rf_params.n_trees; i++) {
@@ -234,8 +242,22 @@ void rfClassifier<T>::fit(const cumlHandle& user_handle, const T* input,
                  tempmem[stream_id]->stream, input, n_cols, n_rows, labels,
                  rowids, n_sampled_rows, n_unique_labels, tree_ptr,
                  this->rf_params.tree_params, tempmem[stream_id]);
+    TreeBuilderHandle tree_builder;
+
+    TREELITE_CHECK(TreeliteCreateTreeBuilder(&tree_builder));
+    if (tree_ptr->sparsetree.size() != 0) {
+      DecisionTree::build_treelite_tree<T, int>(tree_builder, tree_ptr,
+                                              num_output_group);
+
+      // The third argument -1 means append to the end of the tree list.
+      TREELITE_CHECK(
+        TreeliteModelBuilderInsertTree(model_builder, tree_builder, -1));
+    }
   }
+  TREELITE_CHECK(TreeliteModelBuilderCommitModel(model_builder, model));
+
   //Cleanup
+  TREELITE_CHECK(TreeliteDeleteModelBuilder(model_builder));
   for (int i = 0; i < n_streams; i++) {
     auto s = tempmem[i]->stream;
     CUDA_CHECK(cudaStreamSynchronize(s));

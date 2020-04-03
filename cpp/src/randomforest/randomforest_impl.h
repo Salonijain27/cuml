@@ -54,7 +54,8 @@ class rfClassifier : public rf<T, int> {
 
   void fit(const cumlHandle& user_handle, const T* input, int n_rows,
            int n_cols, int* labels, int n_unique_labels,
-           RandomForestMetaData<T, int>*& forest);
+           RandomForestMetaData<T, int>*& forest, ModelHandle* model,
+           int task_category);
   void predict(const cumlHandle& user_handle, const T* input, int n_rows,
                int n_cols, int* predictions,
                const RandomForestMetaData<T, int>* forest,

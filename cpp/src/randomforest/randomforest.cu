@@ -483,7 +483,7 @@ ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles) {
  */
 void fit(const cumlHandle& user_handle, RandomForestClassifierF*& forest,
          float* input, int n_rows, int n_cols, int* labels, int n_unique_labels,
-         RF_params rf_params) {
+         RF_params rf_params, ModelHandle* model, int task_category) {
   ASSERT(!forest->trees, "Cannot fit an existing forest.");
   forest->trees =
     new DecisionTree::TreeMetaDataNode<float, int>[rf_params.n_trees];
@@ -492,12 +492,13 @@ void fit(const cumlHandle& user_handle, RandomForestClassifierF*& forest,
   std::shared_ptr<rfClassifier<float>> rf_classifier =
     std::make_shared<rfClassifier<float>>(rf_params);
   rf_classifier->fit(user_handle, input, n_rows, n_cols, labels,
-                     n_unique_labels, forest);
+                     n_unique_labels, forest, model, task_category);
 }
 
 void fit(const cumlHandle& user_handle, RandomForestClassifierD*& forest,
          double* input, int n_rows, int n_cols, int* labels,
-         int n_unique_labels, RF_params rf_params) {
+         int n_unique_labels, RF_params rf_params, ModelHandle* model,
+         int task_category) {
   ASSERT(!forest->trees, "Cannot fit an existing forest.");
   forest->trees =
     new DecisionTree::TreeMetaDataNode<double, int>[rf_params.n_trees];
@@ -506,7 +507,7 @@ void fit(const cumlHandle& user_handle, RandomForestClassifierD*& forest,
   std::shared_ptr<rfClassifier<double>> rf_classifier =
     std::make_shared<rfClassifier<double>>(rf_params);
   rf_classifier->fit(user_handle, input, n_rows, n_cols, labels,
-                     n_unique_labels, forest);
+                     n_unique_labels, forest, model, task_category);
 }
 /** @} */
 

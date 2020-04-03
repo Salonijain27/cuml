@@ -60,7 +60,9 @@ cdef extern from "cuml/ensemble/randomforest.hpp" namespace "ML":
                   int,
                   int*,
                   int,
-                  RF_params) except +
+                  RF_params,
+                  ModelHandle*,
+                  int) except +
 
     cdef void fit(cumlHandle & handle,
                   RandomForestMetaData[double, int]*,
@@ -69,7 +71,8 @@ cdef extern from "cuml/ensemble/randomforest.hpp" namespace "ML":
                   int,
                   int*,
                   int,
-                  RF_params) except +
+                  RF_params, ModelHandle*,
+                  int) except +
 
     cdef void predict(cumlHandle& handle,
                       RandomForestMetaData[float, int] *,
@@ -290,6 +293,7 @@ class RandomForestClassifier(Base):
         self.quantile_per_tree = quantile_per_tree
         self.n_cols = None
         self.dtype = None
+        self.treelite_handle = None
         self.n_streams = handle.getNumInternalStreams()
         self.seed = seed
         self.num_classes = 2
@@ -586,6 +590,9 @@ class RandomForestClassifier(Base):
             new RandomForestMetaData[double, int]()
         self.rf_forest64 = <size_t> rf_forest64
 
+        cdef ModelHandle cuml_model_ptr = NULL
+        task_category = CLASSIFICATION_MODEL
+
         if self.seed is None:
             seed_val = <uintptr_t>NULL
         else:
@@ -614,7 +621,9 @@ class RandomForestClassifier(Base):
                 <int> self.n_cols,
                 <int*> y_ptr,
                 <int> num_unique_labels,
-                rf_params)
+                rf_params,
+                & cuml_model_ptr,
+                <int> task_category)
 
         elif self.dtype == np.float64:
             rf_params64 = rf_params
@@ -625,7 +634,9 @@ class RandomForestClassifier(Base):
                 <int> self.n_cols,
                 <int*> y_ptr,
                 <int> num_unique_labels,
-                rf_params64)
+                rf_params64,
+                & cuml_model_ptr,
+                <int> task_category)
 
         else:
             raise TypeError("supports only np.float32 and np.float64 input,"
@@ -636,6 +647,8 @@ class RandomForestClassifier(Base):
         self.handle.sync()
         del(X_m)
         del(y_m)
+        mod_ptr = <size_t> cuml_model_ptr
+        self.treelite_handle = ctypes.c_void_p(mod_ptr).value
         self.num_classes = num_unique_labels
         return self
 
@@ -661,13 +674,15 @@ class RandomForestClassifier(Base):
         cdef RandomForestMetaData[float, int] *rf_forest = \
             <RandomForestMetaData[float, int]*><size_t> self.rf_forest
 
-        build_treelite_forest(& cuml_model_ptr,
-                              rf_forest,
-                              <int> n_cols,
-                              <int> num_classes,
-                              <vector[unsigned char] &> self.model_pbuf_bytes)
-        mod_ptr = <size_t> cuml_model_ptr
-        treelite_handle = ctypes.c_void_p(mod_ptr).value
+        if self.treelite_handle is None:
+            build_treelite_forest(& cuml_model_ptr,
+                                  rf_forest,
+                                  <int> n_cols,
+                                  <int> num_classes,
+                                  <vector[unsigned char] &> self.model_pbuf_bytes)
+            mod_ptr = <size_t> cuml_model_ptr
+            # dont assign self variables in predict
+            self.treelite_handle = ctypes.c_void_p(mod_ptr).value
 
         storage_type = \
             _check_fil_parameter_validity(depth=self.max_depth,
@@ -676,7 +691,7 @@ class RandomForestClassifier(Base):
 
         fil_model = ForestInference()
         tl_to_fil_model = \
-            fil_model.load_from_randomforest(treelite_handle,
+            fil_model.load_from_randomforest(self.treelite_handle,
                                              output_class=output_class,
                                              threshold=threshold,
                                              algo=algo,
@@ -684,7 +699,7 @@ class RandomForestClassifier(Base):
 
         preds = tl_to_fil_model.predict(X, output_type=out_type,
                                         predict_proba=predict_proba)
-        tl.free_treelite_model(treelite_handle)
+        tl.free_treelite_model(self.treelite_handle)
         return preds
 
     def _predict_model_on_cpu(self, X, convert_dtype):
