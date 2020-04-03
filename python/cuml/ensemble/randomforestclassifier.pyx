@@ -675,6 +675,9 @@ class RandomForestClassifier(Base):
             <RandomForestMetaData[float, int]*><size_t> self.rf_forest
 
         if self.treelite_handle is None:
+            PRINT(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
+            print(" ALLLLLLLLLLLLLLLLLLLLEEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRTTTTTTTTTTTTTT")
+            PRINT(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
             build_treelite_forest(& cuml_model_ptr,
                                   rf_forest,
                                   <int> n_cols,
