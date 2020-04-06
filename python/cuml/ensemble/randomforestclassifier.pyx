@@ -294,6 +294,7 @@ class RandomForestClassifier(Base):
         self.n_cols = None
         self.dtype = None
         self.treelite_handle = None
+        self.concat_handle = None
         self.n_streams = handle.getNumInternalStreams()
         self.seed = seed
         self.num_classes = 2
@@ -409,7 +410,12 @@ class RandomForestClassifier(Base):
         return treelite_handle
 
     def _get_protobuf_bytes(self):
-        fit_mod_ptr = self._obtain_treelite_handle()
+        if self.concat_handle:
+            fit_mod_ptr = self.concat_handle
+        if self.concat_handle is None and self.treelite_handle:
+            fit_mod_ptr = self.treelite_handle
+        else:
+            fit_mod_ptr = self._obtain_treelite_handle()
         cdef uintptr_t model_ptr = <uintptr_t> fit_mod_ptr
         model_protobuf_bytes = save_model(<ModelHandle> model_ptr)
 
@@ -423,8 +429,10 @@ class RandomForestClassifier(Base):
         ----------
         tl_to_fil_model : Treelite version of this model
         """
-        treelite_handle = self._obtain_treelite_handle()
-        return _obtain_treelite_model(treelite_handle)
+        if self.treelite_handle is None:
+            handle = self._obtain_treelite_handle()
+
+        return _obtain_treelite_model(handle)
 
     def convert_to_fil_model(self, output_class=True,
                              threshold=0.5, algo='auto',
@@ -472,9 +480,11 @@ class RandomForestClassifier(Base):
             A Forest Inference model which can be used to perform
             inferencing on the random forest model.
         """
-
-        treelite_handle = self._obtain_treelite_handle()
-        return _obtain_fil_model(treelite_handle=treelite_handle,
+        if self.treelite_handle is None:
+            handle = self._obtain_treelite_handle()
+        else:
+            handle = self.treelite_handle
+        return _obtain_fil_model(treelite_handle=handle,
                                  depth=self.max_depth,
                                  output_class=output_class,
                                  threshold=threshold,
@@ -518,8 +528,9 @@ class RandomForestClassifier(Base):
 
     def _concatenate_model_bytes(self, concat_model_handle):
         cdef uintptr_t model_ptr = <uintptr_t> concat_model_handle
+        self.concat_handle = concat_model_handle
         concat_model_bytes = save_model(<ModelHandle> model_ptr)
-        self._model_pbuf_bytes = concat_model_bytes
+        self.model_pbuf_bytes = concat_model_bytes
 
     def fit(self, X, y, convert_dtype=False):
         """
@@ -674,18 +685,14 @@ class RandomForestClassifier(Base):
         cdef RandomForestMetaData[float, int] *rf_forest = \
             <RandomForestMetaData[float, int]*><size_t> self.rf_forest
 
-        if self.treelite_handle is None:
-            PRINT(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
-            print(" ALLLLLLLLLLLLLLLLLLLLEEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRTTTTTTTTTTTTTT")
-            PRINT(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
-            build_treelite_forest(& cuml_model_ptr,
-                                  rf_forest,
-                                  <int> n_cols,
-                                  <int> num_classes,
-                                  <vector[unsigned char] &> self.model_pbuf_bytes)
-            mod_ptr = <size_t> cuml_model_ptr
-            # dont assign self variables in predict
-            self.treelite_handle = ctypes.c_void_p(mod_ptr).value
+        build_treelite_forest(& cuml_model_ptr,
+                              rf_forest,
+                              <int> n_cols,
+                              <int> num_classes,
+                              <vector[unsigned char] &> self.model_pbuf_bytes)
+        mod_ptr = <size_t> cuml_model_ptr
+        # dont assign self variables in predict
+        handle = ctypes.c_void_p(mod_ptr).value
 
         storage_type = \
             _check_fil_parameter_validity(depth=self.max_depth,
@@ -694,7 +701,7 @@ class RandomForestClassifier(Base):
 
         fil_model = ForestInference()
         tl_to_fil_model = \
-            fil_model.load_from_randomforest(self.treelite_handle,
+            fil_model.load_from_randomforest(handle,
                                              output_class=output_class,
                                              threshold=threshold,
                                              algo=algo,
@@ -702,7 +709,7 @@ class RandomForestClassifier(Base):
 
         preds = tl_to_fil_model.predict(X, output_type=out_type,
                                         predict_proba=predict_proba)
-        tl.free_treelite_model(self.treelite_handle)
+        tl.free_treelite_model(handle)
         return preds
 
     def _predict_model_on_cpu(self, X, convert_dtype):

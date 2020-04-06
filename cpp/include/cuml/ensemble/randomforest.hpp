@@ -178,10 +178,12 @@ typedef RandomForestMetaData<double, double> RandomForestRegressorD;
 
 void fit(const cumlHandle& user_handle, RandomForestRegressorF*& forest,
          float* input, int n_rows, int n_cols, float* labels,
-         RF_params rf_params);
+         RF_params rf_params, ModelHandle* model,
+         int task_category);
 void fit(const cumlHandle& user_handle, RandomForestRegressorD*& forest,
          double* input, int n_rows, int n_cols, double* labels,
-         RF_params rf_params);
+         RF_params rf_params, ModelHandle* model,
+         int task_category);
 
 void predict(const cumlHandle& user_handle,
              const RandomForestRegressorF* forest, const float* input,

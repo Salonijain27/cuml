@@ -339,11 +339,11 @@ class RandomForestClassifier(DelayedPredictionMixin):
         model = self.rfs[last_worker].result()
         for n in range(len(self.workers)):
             all_tl_mod_handles.append(model._tl_model_handles(mod_bytes[n]))
-
+        print(" THE ALL TL MODEL HANDLES : ", all_tl_mod_handles)
         concat_model_handle = model._concatenate_treelite_handle(
             treelite_handle=all_tl_mod_handles)
         model._concatenate_model_bytes(concat_model_handle)
-
+        print(" THE CONCATENATED MODEL IS : ", model)
         self.local_model = model
 
     def fit(self, X, y, convert_dtype=False):
@@ -510,10 +510,12 @@ class RandomForestClassifier(DelayedPredictionMixin):
                            convert_dtype=False, predict_model="GPU",
                            delayed=True, fil_sparse_format='auto'):
 
+        print(" OBTAIN THE CONCAT MODEL INFO : ")
         self._concat_treelite_models()
+        print(" FIND THE DIST DATA HANDLR FOR RF DATA")
         data = DistributedDataHandler.single(X, client=self.client)
         self.datatype = data.datatype
-
+        print(" CALL THE RF PREDICT FUNCTION USING LAZY DASK")
         kwargs = {"output_class": output_class, "convert_dtype": convert_dtype,
                   "predict_model": predict_model, "threshold": threshold,
                   "num_classes": num_classes, "algo": algo,

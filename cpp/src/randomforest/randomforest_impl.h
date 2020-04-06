@@ -80,7 +80,8 @@ class rfRegressor : public rf<T, T> {
   ~rfRegressor();
 
   void fit(const cumlHandle& user_handle, const T* input, int n_rows,
-           int n_cols, T* labels, RandomForestMetaData<T, T>*& forest);
+           int n_cols, T* labels, RandomForestMetaData<T, T>*& forest, ModelHandle* model,
+           int task_category);
   void predict(const cumlHandle& user_handle, const T* input, int n_rows,
                int n_cols, T* predictions,
                const RandomForestMetaData<T, T>* forest,

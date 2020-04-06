@@ -26,6 +26,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <ctime>
 
 #include "randomforest_impl.cuh"
 
@@ -280,6 +281,7 @@ void build_treelite_forest(ModelHandle* model,
                            const RandomForestMetaData<T, L>* forest,
                            int num_features, int task_category,
                            std::vector<unsigned char>& data) {
+  clock_t begin = clock();
   bool check_val = (data).empty();
   if (not check_val) {
     // create a temp file
@@ -289,6 +291,8 @@ void build_treelite_forest(ModelHandle* model,
     file.write((char*)&data[0], data.size());
     // read the file as a protobuf model
     TREELITE_CHECK(TreeliteLoadProtobufModel(filename, model));
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO READ MODELS : " << double(end - begin) / CLOCKS_PER_SEC << std::flush << std::endl;
   }
 
   else {
@@ -325,21 +329,31 @@ void build_treelite_forest(ModelHandle* model,
 
     TREELITE_CHECK(TreeliteModelBuilderCommitModel(model_builder, model));
     TREELITE_CHECK(TreeliteDeleteModelBuilder(model_builder));
+    clock_t end = clock();
+    std::cout << "TIME REQUIRED TO CREATE TL MODELS : " << double(end - begin) / CLOCKS_PER_SEC
+              << std::flush << std::endl;
   }
 }
 
 std::vector<unsigned char> save_model(ModelHandle model) {
   // create a temp file
+  clock_t begin = clock();
   const char* filename = std::tmpnam(nullptr);
   // export the treelite model to protobuf nd save it in the temp file
-  TreeliteExportProtobufModel(filename, model);
+  TREELITE_CHECK(TreeliteExportProtobufModel(filename, model));
   // read from the temp file and obtain the model bytes
+  //size_t* num_trees;
+  ///TreeliteQueryNumTree(model, num_trees);
+  tl::Model& first_model = *(tl::Model*)model;
+  std::cout << " model num trees in save model : " << (first_model.trees).size() << std::flush << std::endl;
   std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
   in.seekg(0, std::ios::end);
   int size_of_file = in.tellg();
   vector<unsigned char> bytes_info(size_of_file, 0);
   ifstream infile(filename, ios::in | ios::binary);
   infile.read((char*)&bytes_info[0], bytes_info.size());
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO SAVE MODELS : " << double(end - begin) / CLOCKS_PER_SEC << std::flush << std::endl;
   return bytes_info;
 }
 
@@ -451,15 +465,27 @@ void compare_concat_forest_to_subforests(
  */
 ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles) {
   tl::Model& first_model = *(tl::Model*)treelite_handles[0];
+  tl::Model& second_model = *(tl::Model*)treelite_handles[1];
   tl::Model* concat_model = new tl::Model;
   for (int forest_idx = 0; forest_idx < treelite_handles.size(); forest_idx++) {
     tl::Model& model = *(tl::Model*)treelite_handles[forest_idx];
     concat_model->trees.insert(concat_model->trees.end(), model.trees.begin(),
                                model.trees.end());
+
   }
+  std::cout << " first_model->trees : " << (first_model.trees).size() << std::flush
+            << std::endl;
+  std::cout << " treelite_handles[1]->trees : " << (second_model.trees).size() << std::flush
+            << std::endl;
+  std::cout << " concat model num trees : " << (concat_model->trees).size() << std::flush << std::endl;
   concat_model->num_feature = first_model.num_feature;
+  std::cout << "concat_model->num_feature : " << concat_model->num_feature << std::flush << std::endl;
   concat_model->num_output_group = first_model.num_output_group;
+  std::cout << " concat_model->num_output_group : " << concat_model->num_output_group << std::flush
+            << std::endl;
   concat_model->random_forest_flag = first_model.random_forest_flag;
+  std::cout << "concat_model->random_forest_flag  : " << concat_model->random_forest_flag << std::flush
+            << std::endl;
   concat_model->param = first_model.param;
   return concat_model;
 }
@@ -484,6 +510,7 @@ ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles) {
 void fit(const cumlHandle& user_handle, RandomForestClassifierF*& forest,
          float* input, int n_rows, int n_cols, int* labels, int n_unique_labels,
          RF_params rf_params, ModelHandle* model, int task_category) {
+  clock_t begin = clock();
   ASSERT(!forest->trees, "Cannot fit an existing forest.");
   forest->trees =
     new DecisionTree::TreeMetaDataNode<float, int>[rf_params.n_trees];
@@ -493,6 +520,8 @@ void fit(const cumlHandle& user_handle, RandomForestClassifierF*& forest,
     std::make_shared<rfClassifier<float>>(rf_params);
   rf_classifier->fit(user_handle, input, n_rows, n_cols, labels,
                      n_unique_labels, forest, model, task_category);
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO FIT MODELS : " << double(end - begin) / CLOCKS_PER_SEC << std::flush << std::endl;
 }
 
 void fit(const cumlHandle& user_handle, RandomForestClassifierD*& forest,
@@ -647,7 +676,8 @@ RF_params set_rf_class_obj(int max_depth, int max_leaves, float max_features,
  */
 void fit(const cumlHandle& user_handle, RandomForestRegressorF*& forest,
          float* input, int n_rows, int n_cols, float* labels,
-         RF_params rf_params) {
+         RF_params rf_params, ModelHandle* model,
+         int task_category) {
   ASSERT(!forest->trees, "Cannot fit an existing forest.");
   forest->trees =
     new DecisionTree::TreeMetaDataNode<float, float>[rf_params.n_trees];
@@ -655,12 +685,13 @@ void fit(const cumlHandle& user_handle, RandomForestRegressorF*& forest,
 
   std::shared_ptr<rfRegressor<float>> rf_regressor =
     std::make_shared<rfRegressor<float>>(rf_params);
-  rf_regressor->fit(user_handle, input, n_rows, n_cols, labels, forest);
+  rf_regressor->fit(user_handle, input, n_rows, n_cols, labels, forest, model, task_category);
 }
 
 void fit(const cumlHandle& user_handle, RandomForestRegressorD*& forest,
          double* input, int n_rows, int n_cols, double* labels,
-         RF_params rf_params) {
+         RF_params rf_params, ModelHandle* model,
+         int task_category) {
   ASSERT(!forest->trees, "Cannot fit an existing forest.");
   forest->trees =
     new DecisionTree::TreeMetaDataNode<double, double>[rf_params.n_trees];
@@ -668,7 +699,7 @@ void fit(const cumlHandle& user_handle, RandomForestRegressorD*& forest,
 
   std::shared_ptr<rfRegressor<double>> rf_regressor =
     std::make_shared<rfRegressor<double>>(rf_params);
-  rf_regressor->fit(user_handle, input, n_rows, n_cols, labels, forest);
+  rf_regressor->fit(user_handle, input, n_rows, n_cols, labels, forest, model, task_category);
 }
 /** @} */
 
