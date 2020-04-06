@@ -190,6 +190,7 @@ class DelayedParallelFunc(object):
 class DelayedPredictionMixin(DelayedParallelFunc):
 
     def _predict(self, X, delayed=True, **kwargs):
+        print(" kwargs fil_sparse_format : ", kwargs['fil_sparse_format'])
         return self._run_parallel_func(_predict_func, X, 1, delayed,
                                        **kwargs)
 

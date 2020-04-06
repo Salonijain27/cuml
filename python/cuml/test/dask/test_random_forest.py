@@ -148,6 +148,7 @@ def test_rf_classification_dask_cudf(partitions_per_worker, cluster):
         c.close()
 
 
+<<<<<<< HEAD
 def test_rf_throws_exceptions(cluster):
     c = None
     try:
@@ -168,6 +169,7 @@ def test_rf_throws_exceptions(cluster):
         if c is not None:
             c.close()
 """
+
 
 @pytest.mark.parametrize('partitions_per_worker', [1, 5])
 def test_rf_regression_dask_fil(partitions_per_worker, cluster):

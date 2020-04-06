@@ -26,6 +26,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <ctime>
 
 #include "randomforest_impl.cuh"
 
@@ -279,7 +280,9 @@ template <class T, class L>
 void build_treelite_forest(ModelHandle* model,
                            const RandomForestMetaData<T, L>* forest,
                            int num_features, int task_category,
-                           std::vector<unsigned char>& data) {
+                           std::vector<unsigned char>& data,
+                           const cumlHandle& handle) {
+  clock_t begin = clock();
   bool check_val = (data).empty();
   if (not check_val) {
     // create a temp file
@@ -289,6 +292,8 @@ void build_treelite_forest(ModelHandle* model,
     file.write((char*)&data[0], data.size());
     // read the file as a protobuf model
     TREELITE_CHECK(TreeliteLoadProtobufModel(filename, model));
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO READ MODELS : " << double(end - begin) / CLOCKS_PER_SEC << std::flush << std::endl;
   }
 
   else {
@@ -325,11 +330,15 @@ void build_treelite_forest(ModelHandle* model,
 
     TREELITE_CHECK(TreeliteModelBuilderCommitModel(model_builder, model));
     TREELITE_CHECK(TreeliteDeleteModelBuilder(model_builder));
+    clock_t end = clock();
+    std::cout << "TIME REQUIRED TO CREATE TL MODELS : " << double(end - begin) / CLOCKS_PER_SEC
+              << std::flush << std::endl;
   }
 }
 
-std::vector<unsigned char> save_model(ModelHandle model) {
+std::vector<unsigned char> save_model(ModelHandle model, const cumlHandle& handle) {
   // create a temp file
+  clock_t begin = clock();
   const char* filename = std::tmpnam(nullptr);
   // export the treelite model to protobuf nd save it in the temp file
   TreeliteExportProtobufModel(filename, model);
@@ -340,6 +349,10 @@ std::vector<unsigned char> save_model(ModelHandle model) {
   vector<unsigned char> bytes_info(size_of_file, 0);
   ifstream infile(filename, ios::in | ios::binary);
   infile.read((char*)&bytes_info[0], bytes_info.size());
+  CUDA_CHECK(cudaStreamSynchronize(handle.getStream()));
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO save_model to bytes : " << double(end - begin) / CLOCKS_PER_SEC
+            << std::flush << std::endl;
   return bytes_info;
 }
 
@@ -454,7 +467,9 @@ void compare_concat_forest_to_subforests(
  * @param[in] treelite_handles: List containing ModelHandles for the forest present in
  *   each worker.
  */
-ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles) {
+ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles,
+                              const cumlHandle& handle) {
+  clock_t begin = clock();
   tl::Model& first_model = *(tl::Model*)treelite_handles[0];
   tl::Model* concat_model = new tl::Model;
   for (int forest_idx = 0; forest_idx < treelite_handles.size(); forest_idx++) {
@@ -462,13 +477,13 @@ ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles) {
     concat_model->trees.insert(concat_model->trees.end(), model.trees.begin(),
                                model.trees.end());
   }
-  std::cout << " Single HANDLE IN C++ CREATE CONCAT MOD : " << treelite_handles[0] << std::flush << std::endl;
   concat_model->num_feature = first_model.num_feature;
   concat_model->num_output_group = first_model.num_output_group;
   concat_model->random_forest_flag = first_model.random_forest_flag;
   concat_model->param = first_model.param;
-  std::cout << " CONCAT HANDLE IN C++ CREATE CONCAT MOD : " << concat_model << std::flush << std::endl;
-  compare_concat_forest_to_subforests(concat_model, treelite_handles);
+  CUDA_CHECK(cudaStreamSynchronize(handle.getStream()));
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO CONCAT MODELS : " << double(end - begin) / CLOCKS_PER_SEC << std::flush << std::endl;
   return concat_model;
 }
 
@@ -773,14 +788,18 @@ template void null_trees_ptr<double, double>(RandomForestRegressorD*& forest);
 
 template void build_treelite_forest<float, int>(
   ModelHandle* model, const RandomForestMetaData<float, int>* forest,
-  int num_features, int task_category, std::vector<unsigned char>& data);
+  int num_features, int task_category, std::vector<unsigned char>& data,
+  const cumlHandle& user_handle);
 template void build_treelite_forest<double, int>(
   ModelHandle* model, const RandomForestMetaData<double, int>* forest,
-  int num_features, int task_category, std::vector<unsigned char>& data);
+  int num_features, int task_category, std::vector<unsigned char>& data,
+  const cumlHandle& user_handle);
 template void build_treelite_forest<float, float>(
   ModelHandle* model, const RandomForestMetaData<float, float>* forest,
-  int num_features, int task_category, std::vector<unsigned char>& data);
+  int num_features, int task_category, std::vector<unsigned char>& data,
+  const cumlHandle& user_handle);
 template void build_treelite_forest<double, double>(
   ModelHandle* model, const RandomForestMetaData<double, double>* forest,
-  int num_features, int task_category, std::vector<unsigned char>& data);
+  int num_features, int task_category, std::vector<unsigned char>& data,
+  const cumlHandle& user_handle);
 }  // End namespace ML

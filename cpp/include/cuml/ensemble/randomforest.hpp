@@ -120,11 +120,14 @@ template <class T, class L>
 void build_treelite_forest(ModelHandle* model,
                            const RandomForestMetaData<T, L>* forest,
                            int num_features, int task_category,
-                           std::vector<unsigned char>& data);
+                           std::vector<unsigned char>& data,
+                           const cumlHandle& user_handle);
 
-std::vector<unsigned char> save_model(ModelHandle model);
+std::vector<unsigned char> save_model(ModelHandle model,
+                                      const cumlHandle& user_handle);
 
-ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles);
+ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles,
+                              const cumlHandle& user_handle);
 
 void compare_concat_forest_to_subforests(
   ModelHandle concat_tree_handle, std::vector<ModelHandle> treelite_handles);

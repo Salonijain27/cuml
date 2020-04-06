@@ -100,9 +100,10 @@ cdef extern from "cuml/ensemble/randomforest.hpp" namespace "ML":
                                           RandomForestMetaData[T, L]*,
                                           int,
                                           int,
-                                          vector[unsigned char] &) except +
+                                          vector[unsigned char] &,
+                                          cumlHandle & handle) except +
 
-    cdef vector[unsigned char] save_model_protobuf(ModelHandle) except +
+    cdef vector[unsigned char] save_model_protobuf(ModelHandle, cumlHandle & handle) except +
 
     cdef void print_rf_summary[T, L](RandomForestMetaData[T, L]*) except +
     cdef void print_rf_detailed[T, L](RandomForestMetaData[T, L]*) except +
@@ -123,7 +124,8 @@ cdef extern from "cuml/ensemble/randomforest.hpp" namespace "ML":
                                     bool,
                                     int) except +
 
-    cdef vector[unsigned char] save_model(ModelHandle)
+    cdef vector[unsigned char] save_model(ModelHandle, cumlHandle & handle)
 
     cdef ModelHandle concatenate_trees(
-        vector[ModelHandle] &treelite_handles) except +
+        vector[ModelHandle] &treelite_handles,
+        cumlHandle & handle) except +

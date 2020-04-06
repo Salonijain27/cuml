@@ -1,0 +1,15 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+/gpfs/fs1/saljain/miniconda3/envs/cuml_dev/lib/python3.7/site-packages/dask/array/random.py:27: FutureWarning: dask.array.random.doc_wraps is deprecated and will be removed in a future version
+  FutureWarning,
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 0.696983
+TIME REQUIRED TO CONCAT MODELS : 0.033113
+ STORAGE TYPE IN fil c++ : 0
+TIME REQUIRED TO tl2fil_common : 0.022672
+ number of nodes in the dense tree : 1310710
+TIME REQUIRED TO tl2fil_dense : 0.078881
+ NUMBER OF NODES : 864011504
+TIME REQUIRED TO BUILD FIL FROM TREELITE DENSE : 0.113433
+#################################################
+#################################################
+TIME REQUIRED TO predict : 0.000116
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 0.67006

@@ -1,4 +1,4 @@
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 import numpy as np
 from time import time
 import sys
@@ -35,7 +35,7 @@ def run_skl_benchmark(n_cores, X_filepath, y_filepath, n_gb, n_features):
     X = read_data(X_filepath, n_samples, n_features, n_gb, n_samples_per_gb)
     y = read_data(y_filepath, n_samples, None, n_gb, n_samples_per_gb)
     
-    lr = LinearRegression(n_jobs=n_cores)
+    lr = RandomForestRegressor(max_depth=16)
 
     start_fit_time = time()
     lr.fit(X, y)
@@ -55,7 +55,7 @@ def run_skl_benchmark(n_cores, X_filepath, y_filepath, n_gb, n_features):
 
     del X, y, preds
     to_write = ','.join(map(str, [n_cores, n_samples, n_features, fit_time, pred_time, mse]))
-    with open('/gpfs/fs1/dgala/b_outs/skl_benchmark.csv', 'a') as f:
+    with open('/gpfs/fs1/saljain/b_outs/skl_benchmark.csv', 'a') as f:
         f.write(to_write)
         f.write('\n')
 

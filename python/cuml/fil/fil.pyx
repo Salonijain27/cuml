@@ -289,6 +289,8 @@ cdef class ForestInference_impl():
                                         str algo,
                                         float threshold,
                                         str storage_type):
+        print(" The storage type in FIL CYTHON : ", storage_type)
+
         cdef treelite_params_t treelite_params
         treelite_params.output_class = output_class
         treelite_params.threshold = threshold
@@ -312,6 +314,7 @@ cdef class ForestInference_impl():
                                  str algo,
                                  float threshold,
                                  str storage_type):
+        print(" The storage type in FIL CYTHON : ", storage_type)
         return self.load_from_treelite_model_handle(<uintptr_t>model.handle,
                                                     output_class, algo,
                                                     threshold, storage_type)
@@ -322,6 +325,7 @@ cdef class ForestInference_impl():
                                str algo,
                                float threshold,
                                str storage_type):
+        print(" The storage type in FIL CYTHON : ", storage_type)
 
         cdef treelite_params_t treelite_params
 

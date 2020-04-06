@@ -1,0 +1,245 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.0286
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.1337
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.2608
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.1911
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.2725
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.2305
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 7.60324
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 7.52989
+TIME REQUIRED TO CONCAT MODELS : 6.6532
+['tcp://127.0.0.1:35769', 'tcp://127.0.0.1:35829', 'tcp://127.0.0.1:36919', 'tcp://127.0.0.1:42807', 'tcp://127.0.0.1:44345', 'tcp://127.0.0.1:45133', 'tcp://127.0.0.1:45755', 'tcp://127.0.0.1:46145']
+[array(['/gpfs/fs1/saljain/data/data-20/X/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/2.npy'], dtype='<U38')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-20/y/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/2.npy'], dtype='<U38')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f5af40bac90>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  15026552832
+ CPU MEMORY BEFORE FIT :  4.3
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 502693847040, 'percent': 7.1, 'used': 24296787968, 'free': 504405319680, 'active': 10430763008, 'inactive': 13747445760, 'buffers': 10612736, 'cached': 12230873088, 'shared': 9223692288, 'slab': 6023831552}
+ START FITTING THE  MODEL
+ FINISH FIT 
+nGPUS:  8 , Shape:  (Delayed('int-c9b90a14-25e3-4877-bcab-1d77fa747633'), 20) , Fit Time:  3.5372631549835205
+ FREE MEMORY AFTER FIT :  15026552832
+ CPU MEMORY AFTER FIT :  27.5
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 498538708992, 'percent': 7.8, 'used': 28447150080, 'free': 500246388736, 'active': 14566572032, 'inactive': 13748408320, 'buffers': 10620928, 'cached': 12239433728, 'shared': 9224732672, 'slab': 6035259392}
+ Number of features :  20
+[array(['/gpfs/fs1/saljain/data/data-20/X/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/2.npy'], dtype='<U38')]
+ CREATED A DASK ARRAY 
+((3125000, 3125000, 3125000, 3125000, 3125000, 3125000, 3125000, 3125000), (20,))
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:45225' processes=8 threads=8, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(25000000, 20), dtype=float32, chunksize=(3125000, 20), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+nGPUS:  8 , Shape:  (Delayed('int-c9b90a14-25e3-4877-bcab-1d77fa747633'), 20) , Predict Time:  370.1635239124298
+ CHECK TH MSE VALUE OF PREDS RFR 
+ Number of features :  None
+[array(['/gpfs/fs1/saljain/data/data-20/y/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/2.npy'], dtype='<U38')]
+ CREATED A DASK ARRAY 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ DASK MSE CALC FUNCTION 
+ TYPE OF YTEST :   <class 'dask.array.core.Array'>
+ TYPE OF Y HAT/ PREDS :  <class 'dask.array.core.Array'>
+ TYPE OF Y HAT/ PREDS :  <class 'dask.array.core.Array'>
+ ytest_parts :  [('tcp://127.0.0.1:35769', <Future: finished, type: cupy.ndarray, key: ('concatenate-ef747b2323b78e40a1618937ecefca99', 0)>), ('tcp://127.0.0.1:35829', <Future: finished, type: cupy.ndarray, key: ('concatenate-ef747b2323b78e40a1618937ecefca99', 1)>), ('tcp://127.0.0.1:36919', <Future: finished, type: cupy.ndarray, key: ('concatenate-ef747b2323b78e40a1618937ecefca99', 2)>), ('tcp://127.0.0.1:42807', <Future: finished, type: cupy.ndarray, key: ('concatenate-ef747b2323b78e40a1618937ecefca99', 3)>), ('tcp://127.0.0.1:44345', <Future: finished, type: cupy.ndarray, key: ('concatenate-ef747b2323b78e40a1618937ecefca99', 4)>), ('tcp://127.0.0.1:45133', <Future: finished, type: cupy.ndarray, key: ('concatenate-ef747b2323b78e40a1618937ecefca99', 5)>), ('tcp://127.0.0.1:45755', <Future: finished, type: cupy.ndarray, key: ('concatenate-ef747b2323b78e40a1618937ecefca99', 6)>), ('tcp://127.0.0.1:46145', <Future: finished, type: cupy.ndarray, key: ('concatenate-ef747b2323b78e40a1618937ecefca99', 7)>)]
+ yhat_parts :  [('tcp://127.0.0.1:35769', <Future: finished, type: cupy.ndarray, key: ('concatenate-e7a617e438520d81c5342941c9065bf3', 0)>), ('tcp://127.0.0.1:44345', <Future: finished, type: cupy.ndarray, key: ('concatenate-e7a617e438520d81c5342941c9065bf3', 1)>), ('tcp://127.0.0.1:36919', <Future: finished, type: cupy.ndarray, key: ('concatenate-e7a617e438520d81c5342941c9065bf3', 2)>), ('tcp://127.0.0.1:42807', <Future: finished, type: cupy.ndarray, key: ('concatenate-e7a617e438520d81c5342941c9065bf3', 3)>), ('tcp://127.0.0.1:35829', <Future: finished, type: cupy.ndarray, key: ('concatenate-e7a617e438520d81c5342941c9065bf3', 4)>), ('tcp://127.0.0.1:45133', <Future: finished, type: cupy.ndarray, key: ('concatenate-e7a617e438520d81c5342941c9065bf3', 5)>), ('tcp://127.0.0.1:45755', <Future: finished, type: cupy.ndarray, key: ('concatenate-e7a617e438520d81c5342941c9065bf3', 6)>), ('tcp://127.0.0.1:46145', <Future: finished, type: cupy.ndarray, key: ('concatenate-e7a617e438520d81c5342941c9065bf3', 7)>)]
+ GOT THE PREDS PARTS 
+ CALLING THE INTERNAL _MSE FUNCTION 
+ CALC THE MSE OF EVERYTHING 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+224.69411849975586
+['tcp://127.0.0.1:35769', 'tcp://127.0.0.1:35829', 'tcp://127.0.0.1:36919', 'tcp://127.0.0.1:42807', 'tcp://127.0.0.1:44345', 'tcp://127.0.0.1:45133', 'tcp://127.0.0.1:45755', 'tcp://127.0.0.1:46145']
+[array(['/gpfs/fs1/saljain/data/data-20/X/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/2.npy'], dtype='<U38')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-20/y/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/2.npy'], dtype='<U38')]TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.6181
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.3284
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.8072
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.7
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.53
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.5447
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 7.77862
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 7.81161
+TIME REQUIRED TO CONCAT MODELS : 7.51668
+
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f5af42ffa50>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  15026552832
+ CPU MEMORY BEFORE FIT :  2.0
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 417259552768, 'percent': 22.9, 'used': 108477210624, 'free': 413294616576, 'active': 94480482304, 'inactive': 20448591872, 'buffers': 37650432, 'cached': 19134115840, 'shared': 9223774208, 'slab': 6231670784}
+ START FITTING THE  MODEL
+ FINISH FIT 
+nGPUS:  8 , Shape:  (Delayed('int-41e6220f-d01f-493a-91f9-ec66afc223ac'), 20) , Fit Time:  3.4350168704986572
+ FREE MEMORY AFTER FIT :  15026552832
+ CPU MEMORY AFTER FIT :  27.8
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 414350143488, 'percent': 23.4, 'used': 111382732800, 'free': 410382327808, 'active': 97385984000, 'inactive': 20449611776, 'buffers': 37650432, 'cached': 19140882432, 'shared': 9224790016, 'slab': 6241157120}
+ Number of features :  20
+[array(['/gpfs/fs1/saljain/data/data-20/X/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/2.npy'], dtype='<U38')]
+ CREATED A DASK ARRAY 
+((3125000, 3125000, 3125000, 3125000, 3125000, 3125000, 3125000, 3125000), (20,))
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:45225' processes=8 threads=8, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(25000000, 20), dtype=float32, chunksize=(3125000, 20), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+nGPUS:  8 , Shape:  (Delayed('int-41e6220f-d01f-493a-91f9-ec66afc223ac'), 20) , Predict Time:  373.2452778816223
+ CHECK TH MSE VALUE OF PREDS RFR 
+ Number of features :  None
+[array(['/gpfs/fs1/saljain/data/data-20/y/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/2.npy'], dtype='<U38')]
+ CREATED A DASK ARRAY 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ DASK MSE CALC FUNCTION 
+ TYPE OF YTEST :   <class 'dask.array.core.Array'>
+ TYPE OF Y HAT/ PREDS :  <class 'dask.array.core.Array'>
+ TYPE OF Y HAT/ PREDS :  <class 'dask.array.core.Array'>
+ ytest_parts :  [('tcp://127.0.0.1:35769', <Future: finished, type: cupy.ndarray, key: ('concatenate-e782d4ba3c91754e6f8c198c3b0fe17f', 0)>), ('tcp://127.0.0.1:35829', <Future: finished, type: cupy.ndarray, key: ('concatenate-e782d4ba3c91754e6f8c198c3b0fe17f', 1)>), ('tcp://127.0.0.1:36919', <Future: finished, type: cupy.ndarray, key: ('concatenate-e782d4ba3c91754e6f8c198c3b0fe17f', 2)>), ('tcp://127.0.0.1:42807', <Future: finished, type: cupy.ndarray, key: ('concatenate-e782d4ba3c91754e6f8c198c3b0fe17f', 3)>), ('tcp://127.0.0.1:44345', <Future: finished, type: cupy.ndarray, key: ('concatenate-e782d4ba3c91754e6f8c198c3b0fe17f', 4)>), ('tcp://127.0.0.1:45133', <Future: finished, type: cupy.ndarray, key: ('concatenate-e782d4ba3c91754e6f8c198c3b0fe17f', 5)>), ('tcp://127.0.0.1:45755', <Future: finished, type: cupy.ndarray, key: ('concatenate-e782d4ba3c91754e6f8c198c3b0fe17f', 6)>), ('tcp://127.0.0.1:46145', <Future: finished, type: cupy.ndarray, key: ('concatenate-e782d4ba3c91754e6f8c198c3b0fe17f', 7)>)]
+ yhat_parts :  [('tcp://127.0.0.1:35769', <Future: finished, type: cupy.ndarray, key: ('concatenate-2bba975c8cb86dece4e6dfff1abbf61c', 0)>), ('tcp://127.0.0.1:35829', <Future: finished, type: cupy.ndarray, key: ('concatenate-2bba975c8cb86dece4e6dfff1abbf61c', 1)>), ('tcp://127.0.0.1:36919', <Future: finished, type: cupy.ndarray, key: ('concatenate-2bba975c8cb86dece4e6dfff1abbf61c', 2)>), ('tcp://127.0.0.1:42807', <Future: finished, type: cupy.ndarray, key: ('concatenate-2bba975c8cb86dece4e6dfff1abbf61c', 3)>), ('tcp://127.0.0.1:44345', <Future: finished, type: cupy.ndarray, key: ('concatenate-2bba975c8cb86dece4e6dfff1abbf61c', 4)>), ('tcp://127.0.0.1:45133', <Future: finished, type: cupy.ndarray, key: ('concatenate-2bba975c8cb86dece4e6dfff1abbf61c', 5)>), ('tcp://127.0.0.1:45755', <Future: finished, type: cupy.ndarray, key: ('concatenate-2bba975c8cb86dece4e6dfff1abbf61c', 6)>), ('tcp://127.0.0.1:46145', <Future: finished, type: cupy.ndarray, key: ('concatenate-2bba975c8cb86dece4e6dfff1abbf61c', 7)>)]
+ GOT THE PREDS PARTS 
+ CALLING THE INTERNAL _MSE FUNCTION 
+ CALC THE MSE OF EVERYTHING 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+224.99637413024902
+['tcp://127.0.0.1:35769', 'tcp://127.0.0.1:35829', 'tcp://127.0.0.1:36919', 'tcp://127.0.0.1:42807', 'tcp://127.0.0.1:44345', 'tcp://127.0.0.1:45133', 'tcp://127.0.0.1:45755', 'tcp://127.0.0.1:46145']
+[array(['/gpfs/fs1/saljain/data/data-20/X/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/2.npy'], dtype='<U38')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-20/y/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/2.npy'], dtype='<U38')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f5a81becdd0>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  15026552832
+ CPU MEMORY BEFORE FIT :  1.9
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 362516484096, 'percent': 33.0, 'used': 163125899264, 'free': 351722123264, 'active': 149043843072, 'inactive': 27156877312, 'buffers': 63635456, 'cached': 26031935488, 'shared': 9223774208, 'slab': 6426095616}
+ START FITTING THE  MODEL
+ FINISH FIT 
+nGPUS:  8 , Shape:  (Delayed('int-c055d1b7-4504-4b65-aa7e-74956f8c4fde'), 20) , Fit Time:  3.4640891551971436
+ FREE MEMORY AFTER FIT :  15026552832
+ CPU MEMORY AFTER FIT :  27.7
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 359609196544, 'percent': 33.5, 'used': 166030503936, 'free': 348812816384, 'active': 151947194368, 'inactive': 27157561344, 'buffers': 63643648, 'cached': 26036629504, 'shared': 9224454144, 'slab': 6433091584}TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.5657
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.8039
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.328
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.808
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.5891
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.9363
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 8.39707
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 7.86283
+TIME REQUIRED TO CONCAT MODELS : 8.55415
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.7927
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.676
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.3046
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.6924
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.5694
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.629
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 7.69819
+TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 7.5495
+TIME REQUIRED TO CONCAT MODELS : 7.87482
+
+ Number of features :  20
+[array(['/gpfs/fs1/saljain/data/data-20/X/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/2.npy'], dtype='<U38')]
+ CREATED A DASK ARRAY 
+((3125000, 3125000, 3125000, 3125000, 3125000, 3125000, 3125000, 3125000), (20,))
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:45225' processes=8 threads=8, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(25000000, 20), dtype=float32, chunksize=(3125000, 20), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION 
+ STEP ONE
+ STEP two 
+ STEP THREE 
+ STEP FOUR 
+ STEP FIVR 
+ THIS IS THE END OF CREATE FUNC 
+ INSIDE THE DistributedDataHandler INIT FUNCtion 
+nGPUS:  8 , Shape:  (Delayed('int-c055d1b7-4504-4b65-aa7e-74956f8c4fde'), 20) , Predict Time:  374.89475107192993
+ CHECK TH MSE VALUE OF PREDS RFR 
+ Number of features :  None
+[array(['/gpfs/fs1/saljain/data/data-20/y/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/2.npy'], dtype='<U38')]
+ CREATED A DASK ARRAY 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ DASK MSE CALC FUNCTION 
+ TYPE OF YTEST :   <class 'dask.array.core.Array'>
+ TYPE OF Y HAT/ PREDS :  <class 'dask.array.core.Array'>
+ TYPE OF Y HAT/ PREDS :  <class 'dask.array.core.Array'>
+ ytest_parts :  [('tcp://127.0.0.1:35769', <Future: finished, type: cupy.ndarray, key: ('concatenate-3b069f193aa5d1b22b88948ffbe627f6', 0)>), ('tcp://127.0.0.1:35829', <Future: finished, type: cupy.ndarray, key: ('concatenate-3b069f193aa5d1b22b88948ffbe627f6', 1)>), ('tcp://127.0.0.1:36919', <Future: finished, type: cupy.ndarray, key: ('concatenate-3b069f193aa5d1b22b88948ffbe627f6', 2)>), ('tcp://127.0.0.1:42807', <Future: finished, type: cupy.ndarray, key: ('concatenate-3b069f193aa5d1b22b88948ffbe627f6', 3)>), ('tcp://127.0.0.1:44345', <Future: finished, type: cupy.ndarray, key: ('concatenate-3b069f193aa5d1b22b88948ffbe627f6', 4)>), ('tcp://127.0.0.1:45133', <Future: finished, type: cupy.ndarray, key: ('concatenate-3b069f193aa5d1b22b88948ffbe627f6', 5)>), ('tcp://127.0.0.1:45755', <Future: finished, type: cupy.ndarray, key: ('concatenate-3b069f193aa5d1b22b88948ffbe627f6', 6)>), ('tcp://127.0.0.1:46145', <Future: finished, type: cupy.ndarray, key: ('concatenate-3b069f193aa5d1b22b88948ffbe627f6', 7)>)]
+ yhat_parts :  [('tcp://127.0.0.1:35769', <Future: finished, type: cupy.ndarray, key: ('concatenate-121fe794d4dcc7c9276d9f0286d05ce9', 0)>), ('tcp://127.0.0.1:35829', <Future: finished, type: cupy.ndarray, key: ('concatenate-121fe794d4dcc7c9276d9f0286d05ce9', 1)>), ('tcp://127.0.0.1:36919', <Future: finished, type: cupy.ndarray, key: ('concatenate-121fe794d4dcc7c9276d9f0286d05ce9', 2)>), ('tcp://127.0.0.1:42807', <Future: finished, type: cupy.ndarray, key: ('concatenate-121fe794d4dcc7c9276d9f0286d05ce9', 3)>), ('tcp://127.0.0.1:44345', <Future: finished, type: cupy.ndarray, key: ('concatenate-121fe794d4dcc7c9276d9f0286d05ce9', 4)>), ('tcp://127.0.0.1:45133', <Future: finished, type: cupy.ndarray, key: ('concatenate-121fe794d4dcc7c9276d9f0286d05ce9', 5)>), ('tcp://127.0.0.1:45755', <Future: finished, type: cupy.ndarray, key: ('concatenate-121fe794d4dcc7c9276d9f0286d05ce9', 6)>), ('tcp://127.0.0.1:46145', <Future: finished, type: cupy.ndarray, key: ('concatenate-121fe794d4dcc7c9276d9f0286d05ce9', 7)>)]
+ GOT THE PREDS PARTS 
+ CALLING THE INTERNAL _MSE FUNCTION 
+ CALC THE MSE OF EVERYTHING 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+225.00321769714355
+['tcp://127.0.0.1:35769', 'tcp://127.0.0.1:35829', 'tcp://127.0.0.1:36919', 'tcp://127.0.0.1:42807', 'tcp://127.0.0.1:44345', 'tcp://127.0.0.1:45133', 'tcp://127.0.0.1:45755', 'tcp://127.0.0.1:46145']
+[array(['/gpfs/fs1/saljain/data/data-20/X/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/2.npy'], dtype='<U38')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.DataFrame'>
+ READ DATA IS NOW OVER : PHEW 
+[array(['/gpfs/fs1/saljain/data/data-20/y/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/y/2.npy'], dtype='<U38')]
+############################################
+ THE TDATAT TYPE OF x IS :  <class 'dask_cudf.core.Series'>
+ READ DATA IS NOW OVER : PHEW 
+<cuml.dask.ensemble.randomforestregressor.RandomForestRegressor object at 0x7f5aec286a90>
+ ######################################################## 
+ ######################################################## 
+ ######################################################## 
+ FREE GPU MEMORY BEFORE FIT :  15026552832
+ CPU MEMORY BEFORE FIT :  1.9
+ CPU MEMORY ALL INFO AS DICT :  {'total': 540943593472, 'available': 309471440896, 'percent': 42.8, 'used': 216074280960, 'free': 291838697472, 'active': 201908428800, 'inactive': 33872293888, 'buffers': 89370624, 'cached': 32941244416, 'shared': 9223774208, 'slab': 6622633984}
+ START FITTING THE  MODEL
+ FINISH FIT 
+nGPUS:  8 , Shape:  (Delayed('int-bc19b276-876b-42c4-94c2-fa2a904df6b7'), 20) , Fit Time:  3.9343740940093994
+ FREE MEMORY AFTER FIT :  15026552832
+ CPU MEMORY AFTER FIT :  24.6
+ CPU MEMORY ALL INFO AS DICT AFTER :  {'total': 540943593472, 'available': 306566402048, 'percent': 43.3, 'used': 218975678464, 'free': 288931106816, 'active': 204809957376, 'inactive': 33873039360, 'buffers': 89370624, 'cached': 32947437568, 'shared': 9224863744, 'slab': 6630260736}
+ Number of features :  20
+[array(['/gpfs/fs1/saljain/data/data-20/X/9.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/8.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/7.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/6.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/5.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/4.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/3.npy'], dtype='<U38'), array(['/gpfs/fs1/saljain/data/data-20/X/2.npy'], dtype='<U38')]
+ CREATED A DASK ARRAY 
+((3125000, 3125000, 3125000, 3125000, 3125000, 3125000, 3125000, 3125000), (20,))
+ INSIDE THE SINGLE FUNCTION IN DistributedDataHandler 
+ CLIENT IN SINGLE :  <Client: 'tcp://127.0.0.1:45225' processes=8 threads=8, memory=540.94 GB>
+ CLS IN SINGLE :  <class 'cuml.dask.common.input_utils.DistributedDataHandler'>
+ DATA IN SINGLE :  dask.array<concatenate, shape=(25000000, 20), dtype=float32, chunksize=(3125000, 20), chunktype=cupy.ndarray>
+ INSIDE TH E CREATE FUNCTION TIME REQUIRED TO BUILD TREELITE MODEL FROM CUML : 10.5377
