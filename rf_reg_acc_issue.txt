@@ -1,0 +1,268 @@
+ depth of the forest : 16
+ max leaves of the forest : -1
+ depth of the forest : 16
+ max leaves of the forest : -1
+Forest has 25 trees, max_depth 16, and max_leaves -1
+Tree #0
+ Decision Tree depth --> 16 and n_leaves --> 1719
+ Tree Fitting - Overall time --> 0.008122 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.008117 seconds
+Tree #1
+ Decision Tree depth --> 16 and n_leaves --> 1678
+ Tree Fitting - Overall time --> 0.008398 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.008394 seconds
+Tree #2
+ Decision Tree depth --> 16 and n_leaves --> 1628
+ Tree Fitting - Overall time --> 0.007889 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.007885 seconds
+Tree #3
+ Decision Tree depth --> 16 and n_leaves --> 1611
+ Tree Fitting - Overall time --> 0.008272 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.008268 seconds
+Tree #4
+ Decision Tree depth --> 16 and n_leaves --> 1683
+ Tree Fitting - Overall time --> 0.008303 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.008298 seconds
+Tree #5
+ Decision Tree depth --> 16 and n_leaves --> 1658
+ Tree Fitting - Overall time --> 0.008297 seconds
+   - preparing for fit time: 3e-06 seconds
+   - tree growing time: 0.008294 seconds
+Tree #6
+ Decision Tree depth --> 16 and n_leaves --> 1624
+ Tree Fitting - Overall time --> 0.00846 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.008455 seconds
+Tree #7
+ Decision Tree depth --> 16 and n_leaves --> 1677
+ Tree Fitting - Overall time --> 0.009807 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.009803 seconds
+Tree #8
+ Decision Tree depth --> 16 and n_leaves --> 1625
+ Tree Fitting - Overall time --> 0.009228 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.009224 seconds
+Tree #9
+ Decision Tree depth --> 16 and n_leaves --> 1661
+ Tree Fitting - Overall time --> 0.009593 seconds
+   - preparing for fit time: 7e-06 seconds
+   - tree growing time: 0.009586 seconds
+Tree #10
+ Decision Tree depth --> 16 and n_leaves --> 1582
+ Tree Fitting - Overall time --> 0.009727 seconds
+   - preparing for fit time: 6e-06 seconds
+   - tree growing time: 0.009721 seconds
+Tree #11
+ Decision Tree depth --> 16 and n_leaves --> 1700
+ Tree Fitting - Overall time --> 0.010201 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.010197 seconds
+Tree #12
+ Decision Tree depth --> 16 and n_leaves --> 1746
+ Tree Fitting - Overall time --> 0.00938 seconds
+   - preparing for fit time: 6e-06 seconds
+   - tree growing time: 0.009374 seconds
+Tree #13
+ Decision Tree depth --> 16 and n_leaves --> 1692
+ Tree Fitting - Overall time --> 0.015052 seconds
+   - preparing for fit time: 1.5e-05 seconds
+   - tree growing time: 0.015037 seconds
+Tree #14
+ Decision Tree depth --> 16 and n_leaves --> 1690
+ Tree Fitting - Overall time --> 0.01131 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.011306 seconds
+Tree #15
+ Decision Tree depth --> 16 and n_leaves --> 1703
+ Tree Fitting - Overall time --> 0.009962 seconds
+   - preparing for fit time: 2e-06 seconds
+   - tree growing time: 0.00996 seconds
+Tree #16
+ Decision Tree depth --> 16 and n_leaves --> 1710
+ Tree Fitting - Overall time --> 0.009466 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.009462 seconds
+Tree #17
+ Decision Tree depth --> 16 and n_leaves --> 1694
+ Tree Fitting - Overall time --> 0.010415 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.01041 seconds
+Tree #18
+ Decision Tree depth --> 16 and n_leaves --> 1602
+ Tree Fitting - Overall time --> 0.008504 seconds
+   - preparing for fit time: 3e-06 seconds
+   - tree growing time: 0.008501 seconds
+Tree #19
+ Decision Tree depth --> 16 and n_leaves --> 1668
+ Tree Fitting - Overall time --> 0.01233 seconds
+   - preparing for fit time: 1.6e-05 seconds
+   - tree growing time: 0.012314 seconds
+Tree #20
+ Decision Tree depth --> 16 and n_leaves --> 1736
+ Tree Fitting - Overall time --> 0.010496 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.010491 seconds
+Tree #21
+ Decision Tree depth --> 16 and n_leaves --> 1676
+ Tree Fitting - Overall time --> 0.009708 seconds
+   - preparing for fit time: 7e-06 seconds
+   - tree growing time: 0.009701 seconds
+Tree #22
+ Decision Tree depth --> 16 and n_leaves --> 1608
+ Tree Fitting - Overall time --> 0.010209 seconds
+   - preparing for fit time: 3e-06 seconds
+   - tree growing time: 0.010206 seconds
+Tree #23
+ Decision Tree depth --> 16 and n_leaves --> 1648
+ Tree Fitting - Overall time --> 0.013012 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.013007 seconds
+Tree #24
+ Decision Tree depth --> 16 and n_leaves --> 1632
+ Tree Fitting - Overall time --> 0.009025 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.00902 seconds
+Forest has 25 trees, max_depth 16, and max_leaves -1
+Tree #0
+ Decision Tree depth --> 16 and n_leaves --> 1600
+ Tree Fitting - Overall time --> 0.009529 seconds
+   - preparing for fit time: 3e-06 seconds
+   - tree growing time: 0.009526 seconds
+Tree #1
+ Decision Tree depth --> 16 and n_leaves --> 1703
+ Tree Fitting - Overall time --> 0.009512 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.009508 seconds
+Tree #2
+ Decision Tree depth --> 16 and n_leaves --> 1708
+ Tree Fitting - Overall time --> 0.010228 seconds
+   - preparing for fit time: 2e-06 seconds
+   - tree growing time: 0.010226 seconds
+Tree #3
+ Decision Tree depth --> 16 and n_leaves --> 1585
+ Tree Fitting - Overall time --> 0.010633 seconds
+   - preparing for fit time: 8e-06 seconds
+   - tree growing time: 0.010625 seconds
+Tree #4
+ Decision Tree depth --> 16 and n_leaves --> 1691
+ Tree Fitting - Overall time --> 0.009991 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.009986 seconds
+Tree #5
+ Decision Tree depth --> 16 and n_leaves --> 1755
+ Tree Fitting - Overall time --> 0.009442 seconds
+   - preparing for fit time: 6e-06 seconds
+   - tree growing time: 0.009436 seconds
+Tree #6
+ Decision Tree depth --> 16 and n_leaves --> 1548
+ Tree Fitting - Overall time --> 0.00839 seconds
+   - preparing for fit time: 6e-06 seconds
+   - tree growing time: 0.008384 seconds
+Tree #7
+ Decision Tree depth --> 16 and n_leaves --> 1695
+ Tree Fitting - Overall time --> 0.01725 seconds
+   - preparing for fit time: 1e-05 seconds
+   - tree growing time: 0.01724 seconds
+Tree #8
+ Decision Tree depth --> 16 and n_leaves --> 1626
+ Tree Fitting - Overall time --> 0.012758 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.012754 seconds
+Tree #9
+ Decision Tree depth --> 16 and n_leaves --> 1663
+ Tree Fitting - Overall time --> 0.01005 seconds
+   - preparing for fit time: 1.2e-05 seconds
+   - tree growing time: 0.010038 seconds
+Tree #10
+ Decision Tree depth --> 16 and n_leaves --> 1718
+ Tree Fitting - Overall time --> 0.010039 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.010034 seconds
+Tree #11
+ Decision Tree depth --> 16 and n_leaves --> 1694
+ Tree Fitting - Overall time --> 0.009368 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.009363 seconds
+Tree #12
+ Decision Tree depth --> 16 and n_leaves --> 1616
+ Tree Fitting - Overall time --> 0.009312 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.009307 seconds
+Tree #13
+ Decision Tree depth --> 16 and n_leaves --> 1719
+ Tree Fitting - Overall time --> 0.017961 seconds
+   - preparing for fit time: 1.2e-05 seconds
+   - tree growing time: 0.017949 seconds
+Tree #14
+ Decision Tree depth --> 16 and n_leaves --> 1620
+ Tree Fitting - Overall time --> 0.011115 seconds
+   - preparing for fit time: 1.7e-05 seconds
+   - tree growing time: 0.011098 seconds
+Tree #15
+ Decision Tree depth --> 16 and n_leaves --> 1711
+ Tree Fitting - Overall time --> 0.010273 seconds
+   - preparing for fit time: 6e-06 seconds
+   - tree growing time: 0.010267 seconds
+Tree #16
+ Decision Tree depth --> 16 and n_leaves --> 1586
+ Tree Fitting - Overall time --> 0.010114 seconds
+   - preparing for fit time: 6e-06 seconds
+   - tree growing time: 0.010108 seconds
+Tree #17
+ Decision Tree depth --> 16 and n_leaves --> 1732
+ Tree Fitting - Overall time --> 0.009475 seconds
+   - preparing for fit time: 3.2e-05 seconds
+   - tree growing time: 0.009443 seconds
+Tree #18
+ Decision Tree depth --> 16 and n_leaves --> 1644
+ Tree Fitting - Overall time --> 0.009102 seconds
+   - preparing for fit time: 5.5e-05 seconds
+   - tree growing time: 0.009047 seconds
+Tree #19
+ Decision Tree depth --> 16 and n_leaves --> 1651
+ Tree Fitting - Overall time --> 0.017372 seconds
+   - preparing for fit time: 1e-05 seconds
+   - tree growing time: 0.017362 seconds
+Tree #20
+ Decision Tree depth --> 16 and n_leaves --> 1619
+ Tree Fitting - Overall time --> 0.012145 seconds
+   - preparing for fit time: 5e-06 seconds
+   - tree growing time: 0.01214 seconds
+Tree #21
+ Decision Tree depth --> 16 and n_leaves --> 1608
+ Tree Fitting - Overall time --> 0.009722 seconds
+   - preparing for fit time: 6e-06 seconds
+   - tree growing time: 0.009716 seconds
+Tree #22
+ Decision Tree depth --> 16 and n_leaves --> 1718
+ Tree Fitting - Overall time --> 0.009872 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.009868 seconds
+Tree #23
+ Decision Tree depth --> 16 and n_leaves --> 1807
+ Tree Fitting - Overall time --> 0.00943 seconds
+   - preparing for fit time: 1e-05 seconds
+   - tree growing time: 0.00942 seconds
+Tree #24
+ Decision Tree depth --> 16 and n_leaves --> 1698
+ Tree Fitting - Overall time --> 0.010206 seconds
+   - preparing for fit time: 4e-06 seconds
+   - tree growing time: 0.010202 seconds
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ num_nodes in fil : 6553550
+ RF FIL ACC SCORE :  0.6467830366961185
