@@ -293,6 +293,8 @@ void build_treelite_forest(ModelHandle* model,
     TREELITE_CHECK(TreeliteLoadProtobufModel(filename, model));
   clock_t end = clock();
   std::cout << "TIME REQUIRED TO READ MODELS : " << double(end - begin) / CLOCKS_PER_SEC << std::flush << std::endl;
+  tl::Model& first_model = *(tl::Model*)(*model);
+  std::cout << " model num trees in read model : " << (first_model.trees).size() << std::flush << std::endl;
   }
 
   else {
@@ -510,6 +512,7 @@ ModelHandle concatenate_trees(std::vector<ModelHandle> treelite_handles) {
 void fit(const cumlHandle& user_handle, RandomForestClassifierF*& forest,
          float* input, int n_rows, int n_cols, int* labels, int n_unique_labels,
          RF_params rf_params, ModelHandle* model, int task_category) {
+  std::cout << " FIT BEGINS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::flush << std::endl;
   clock_t begin = clock();
   ASSERT(!forest->trees, "Cannot fit an existing forest.");
   forest->trees =

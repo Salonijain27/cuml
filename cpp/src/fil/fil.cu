@@ -25,6 +25,7 @@
 #include <cmath>
 #include <limits>
 #include <utility>
+#include <ctime>
 
 #include <cuml/fil/fil.h>
 #include <cuml/common/cuml_allocator.hpp>
@@ -225,7 +226,7 @@ struct sparse_forest : forest {
     if (algo_ == algo_t::ALGO_AUTO) algo_ = algo_t::NAIVE;
     depth_ = 0;  // a placeholder value
     num_nodes_ = params->num_nodes;
-
+    std::cout << " NUMBER OF NODES : " << params->num_nodes << std::flush << std::endl;
     // trees
     trees_ = (int*)h.getDeviceAllocator()->allocate(sizeof(int) * num_trees_,
                                                     h.getStream());
@@ -257,6 +258,7 @@ struct sparse_forest : forest {
 };
 
 void check_params(const forest_params_t* params, bool dense) {
+  std::cout << " NUMBER OF NODES : " << params->num_nodes << std::flush << std::endl;
   if (dense) {
     ASSERT(params->depth >= 0, "depth must be non-negative for dense forests");
   } else {
@@ -412,6 +414,7 @@ void node2fil_sparse(std::vector<sparse_node_t>* pnodes, int root, int cur,
   // init child nodes
   node2fil_sparse(pnodes, root, left, tree, tl_node_at(tree, tl_left));
   node2fil_sparse(pnodes, root, left + 1, tree, tl_node_at(tree, tl_right));
+
 }
 
 void tree2fil_dense(std::vector<dense_node_t>* pnodes, int root,
@@ -420,9 +423,13 @@ void tree2fil_dense(std::vector<dense_node_t>* pnodes, int root,
 }
 
 int tree2fil_sparse(std::vector<sparse_node_t>* pnodes, const tl::Tree& tree) {
+  clock_t begin = clock();
   int root = pnodes->size();
   pnodes->push_back(sparse_node_t());
   node2fil_sparse(pnodes, root, 0, tree, tl_node_at(tree, tree_root(tree)));
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO tree2fil_sparse : " << double(end - begin) / CLOCKS_PER_SEC
+            << std::flush << std::endl;
   return root;
 }
 
@@ -431,6 +438,7 @@ int tree2fil_sparse(std::vector<sparse_node_t>* pnodes, const tl::Tree& tree) {
 void tl2fil_common(forest_params_t* params, const tl::Model& model,
                    const treelite_params_t* tl_params) {
   // fill in forest-indendent params
+  clock_t begin = clock();
   params->algo = tl_params->algo;
   params->threshold = tl_params->threshold;
 
@@ -457,20 +465,29 @@ void tl2fil_common(forest_params_t* params, const tl::Model& model,
   }
   params->num_trees = model.trees.size();
   params->depth = max_depth(model);
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO tl2fil_common : " << double(end - begin) / CLOCKS_PER_SEC
+            << std::flush << std::endl;
 }
 
 // uses treelite model with additional tl_params to initialize FIL params
 // and dense nodes (stored in *pnodes)
 void tl2fil_dense(std::vector<dense_node_t>* pnodes, forest_params_t* params,
                   const tl::Model& model, const treelite_params_t* tl_params) {
+  clock_t begin = clock();
   tl2fil_common(params, model, tl_params);
 
   // convert the nodes
   int num_nodes = forest_num_nodes(params->num_trees, params->depth);
+  std::cout << " number of nodes in the dense tree : " << num_nodes << std::flush << std::endl;
+
   pnodes->resize(num_nodes, dense_node_t{0, 0});
   for (int i = 0; i < model.trees.size(); ++i) {
     tree2fil_dense(pnodes, i * tree_num_nodes(params->depth), model.trees[i]);
   }
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO tl2fil_dense : " << double(end - begin) / CLOCKS_PER_SEC
+            << std::flush << std::endl;
 }
 
 // uses treelite model with additional tl_params to initialize FIL params,
@@ -478,6 +495,7 @@ void tl2fil_dense(std::vector<dense_node_t>* pnodes, forest_params_t* params,
 void tl2fil_sparse(std::vector<int>* ptrees, std::vector<sparse_node_t>* pnodes,
                    forest_params_t* params, const tl::Model& model,
                    const treelite_params_t* tl_params) {
+  clock_t begin = clock();
   tl2fil_common(params, model, tl_params);
 
   // convert the nodes
@@ -486,6 +504,10 @@ void tl2fil_sparse(std::vector<int>* ptrees, std::vector<sparse_node_t>* pnodes,
     ptrees->push_back(root);
   }
   params->num_nodes = pnodes->size();
+  std::cout << " number of nodes in the tree : " << params->num_nodes << std::flush << std::endl;
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO tl2fil_sparse : " << double(end - begin) / CLOCKS_PER_SEC
+            << std::flush << std::endl;
 }
 
 void init_dense(const cumlHandle& h, forest_t* pf, const dense_node_t* nodes,
@@ -506,6 +528,9 @@ void init_sparse(const cumlHandle& h, forest_t* pf, const int* trees,
 
 void from_treelite(const cumlHandle& handle, forest_t* pforest,
                    ModelHandle model, const treelite_params_t* tl_params) {
+  std::cout << " STORAGE TYPE IN fil c++ : " << tl_params->storage_type << std::flush
+            << std::endl;
+  clock_t begin = clock();
   storage_type_t storage_type = tl_params->storage_type;
   // build dense trees by default
   const tl::Model& model_ref = *(tl::Model*)model;
@@ -535,6 +560,11 @@ void from_treelite(const cumlHandle& handle, forest_t* pforest,
       // sync is necessary as nodes is used in init_dense(),
       // but destructed at the end of this function
       CUDA_CHECK(cudaStreamSynchronize(handle.getStream()));
+      clock_t end = clock();
+      std::cout << "TIME REQUIRED TO BUILD FIL FROM TREELITE DENSE : " << double(end - begin) / CLOCKS_PER_SEC
+                << std::flush << std::endl;
+      std::cout << "#################################################" << std::flush << std::endl;
+      std::cout << "#################################################" << std::flush << std::endl;
       break;
     }
     case storage_type_t::SPARSE: {
@@ -546,10 +576,16 @@ void from_treelite(const cumlHandle& handle, forest_t* pforest,
       // sync is necessary as nodes is used in init_dense(),
       // but destructed at the end of this function
       CUDA_CHECK(cudaStreamSynchronize(handle.getStream()));
+      clock_t end = clock();
+      std::cout << "TIME REQUIRED TO BUILD FIL FROM TREELITE SPARSE : " << double(end - begin) / CLOCKS_PER_SEC
+                << std::flush << std::endl;
+      std::cout << "#################################################" << std::flush << std::endl;
+      std::cout << "#################################################" << std::flush << std::endl;
       break;
     }
     default:
       ASSERT(false, "tl_params->sparse must be one of AUTO, DENSE or SPARSE");
+
   }
 }
 
@@ -560,7 +596,12 @@ void free(const cumlHandle& h, forest_t f) {
 
 void predict(const cumlHandle& h, forest_t f, float* preds, const float* data,
              size_t num_rows, bool predict_proba) {
+  clock_t begin = clock();
   f->predict(h, preds, data, num_rows, predict_proba);
+  CUDA_CHECK(cudaStreamSynchronize(h.getStream()));
+  clock_t end = clock();
+  std::cout << "TIME REQUIRED TO predict : " << double(end - begin) / CLOCKS_PER_SEC
+            << std::flush << std::endl;
 }
 
 }  // namespace fil

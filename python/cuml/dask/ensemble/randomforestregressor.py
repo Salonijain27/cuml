@@ -26,6 +26,7 @@ from cuml.dask.common.input_utils import DistributedDataHandler
 
 import math
 import random
+import timeit
 from uuid import uuid1
 
 
@@ -325,7 +326,7 @@ class RandomForestRegressor(DelayedPredictionMixin):
         to create a single model. The concatenated model is then converted to
         bytes format.
         """
-
+        start = timeit.default_timer()
         mod_bytes = []
         for w in self.workers:
             mod_bytes.append(self.rfs[w].result().model_pbuf_bytes)
@@ -335,11 +336,12 @@ class RandomForestRegressor(DelayedPredictionMixin):
         for n in range(len(self.workers)):
             all_tl_mod_handles.append(model._tl_model_handles(mod_bytes[n]))
 
-        concat_model_handle = model._concatenate_treelite_handle(
+        model._concatenate_treelite_handle(
             treelite_handle=all_tl_mod_handles)
-        model._concatenate_model_bytes(concat_model_handle)
 
         self.local_model = model
+        stop = timeit.default_timer()
+        print('Time in predict dask RF TO CALC TIME FOR CONCat_model : ', stop - start) 
 
     def fit(self, X, y):
         """
@@ -475,13 +477,20 @@ class RandomForestRegressor(DelayedPredictionMixin):
                            convert_dtype=True, fil_sparse_format='auto',
                            delayed=True):
         self._concat_treelite_models()
+        start = timeit.default_timer()
+
         data = DistributedDataHandler.single(X, client=self.client)
         self.datatype = data.datatype
-
+        stop = timeit.default_timer()
+        print(" TIME REQUIRED TO DISTRIBUT DATA IN PREDICT GPU : ", (stop-start))
+        start = timeit.default_timer()
         kwargs = {"convert_dtype": convert_dtype,
                   "predict_model": predict_model, "algo": algo,
                   "fil_sparse_format": fil_sparse_format}
-        return self._predict(X, delayed=delayed, **kwargs)
+        preds = self._predict(X, delayed=delayed, **kwargs)
+        stop = timeit.default_timer()
+        print(" TIME REQUIRED TO RUN PREDICT IN PREDICT GPU : ", (stop-start))
+        return preds
 
     """
     TODO : Update function names used for CPU predict.

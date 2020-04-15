@@ -3,8 +3,6 @@ from dask.distributed import Client, wait, futures_of, performance_report
 import dask.array as da
 import dask.dataframe as dd
 from cuml.dask.ensemble import RandomForestRegressor
-from cuml.dask.ensemble import RandomForestClassifier
-
 from cuml.dask.datasets.regression import make_regression
 from cuml.dask.common.comms import CommsContext
 from cuml.dask.common import to_dask_cudf
@@ -13,6 +11,7 @@ import pandas as pd
 import dask_cudf
 from numba import cuda
 import psutil
+from dask_ml.metrics import r2_score
 import numpy as np
 import sys
 from time import time, sleep
@@ -24,7 +23,6 @@ import dask
 import numpy as np
 from cuml.dask.common.dask_arr_utils import extract_arr_partitions
 import os
-
 
 base_n_points = 250_000_000
 n_gb_data = np.asarray([2], dtype=int)
@@ -307,17 +305,18 @@ def dask_mse(ytest, yhat, client, workers):
 def set_alloc():
     cp.cuda.set_allocator(rmm.rmm_cupy_allocator)
 
-def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, scheduler_file):
+def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, n_trees, scheduler_file):
 
     # for n_gb_m in n_gb_data:
     #     for n_features in base_n_features:
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     if scheduler_file == 'None':
-        cluster = LocalCUDACluster(n_workers=n_workers, threads_per_worker=1)
-    fit_time = np.zeros(2)
-    pred_time = np.zeros(2)
-    mse = np.zeros(2)
-    for i in range(2):
+        cluster = LocalCUDACluster(n_workers=n_workers)
+    num_iter = 1
+    fit_time = np.zeros(num_iter)
+    pred_time = np.zeros(num_iter)
+    mse = np.zeros(num_iter)
+    for i in range(num_iter):
         try:
             n_points = int(base_n_points * n_gb)
             if scheduler_file != 'None':
@@ -347,8 +346,7 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, sch
                 #print(y.compute_chunk_sizes().chunks)
                 #print(" FINAL TYPE OF y RETURNED : ", type(y))
                 wait(y)
-
-                rfr = RandomForestRegressor(max_depth=25)
+                rfr = RandomForestRegressor(max_depth=n_trees)
                 print(rfr)
                 print(" ######################################################## ")
                 print(" ######################################################## ")
@@ -368,15 +366,15 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, sch
                 print(" FREE MEMORY AFTER FIT : ", free_mem_2)
                 print(" CPU MEMORY AFTER FIT : ", psutil.cpu_percent())
                 print(" CPU MEMORY ALL INFO AS DICT AFTER : ", dict(psutil.virtual_memory()._asdict()))
-                client.cancel(X)
-                del X
+                #client.cancel(X)
+                #del X
                 client.cancel(y)
                 del y
-                X_test = read_data_test(client, X_filepath, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb)
-                print(X_test.compute_chunk_sizes().chunks)
-                wait(X_test)
+                #X_test = read_data_test(client, X_filepath, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb)
+                #print(X_test.compute_chunk_sizes().chunks)
+                #wait(X_test)
                 start_pred_time = time()
-                preds = rfr.predict(X_test, predict_model='GPU', fil_sparse_format=True, algo='naive')
+                preds = rfr.predict(X, predict_model='GPU', fil_sparse_format=True, algo='naive')
                 parts = client.sync(extract_arr_partitions, preds, client)
                 wait([p for w, p in parts])
                 end_pred_time = time()
@@ -400,12 +398,8 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, sch
                 mse[i] = dask_mse(y_test, preds, client, workers)
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 print(mse[i])
-                client.cancel(X_test)
-                del X_test
-                client.cancel(y_test)
-                del y_test
-                client.cancel(preds)
-                del preds
+
+                #del X_test, y_test, preds
 
             except Exception as e:
                 print(e)
@@ -425,20 +419,21 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, sch
 
         client.close()
 
-
+    
     if scheduler_file == 'None':
         cluster.close()
     print("starting write")
-    fit_stats = [fit_time[0], np.mean(fit_time[1:]), np.min(fit_time[1:]), np.var(fit_time[1:])]
+    fit_stats = [n_trees, fit_time[0], np.mean(fit_time[1:]), np.min(fit_time[1:]), np.var(fit_time[1:])]
     pred_stats = [np.mean(pred_time[1:]), np.min(pred_time[1:]), np.var(pred_time[1:]), np.mean(mse[1:])]
     to_write = ','.join(map(str, [n_workers, n_samples, n_features] + fit_stats + pred_stats))
     print(to_write)
-    with open('/home/saloni/b_outs/reg_benchmark.csv', 'a') as f:
+    with open('/gpfs/fs1/saljain/b_outs/benchmark_report_n1_depth_25_trees_100.csv', 'a') as f:
         f.write(to_write)
         f.write('\n')
     print("ending write")
         #     break
         # break
+
 
 if __name__ == '__main__':
     n_gpus = int(sys.argv[1])
@@ -447,4 +442,5 @@ if __name__ == '__main__':
     n_gb = int(sys.argv[4])
     n_features = int(sys.argv[5])
     scheduler_file = sys.argv[6]
-    run_ideal_benchmark(n_gpus, X_filepath, y_filepath, n_gb, n_features, scheduler_file)
+    n_trees = int(sys.argv[7])
+    run_ideal_benchmark(n_gpus, X_filepath, y_filepath, n_gb, n_features, n_trees, scheduler_file)
