@@ -1,0 +1,68 @@
+ model num trees in save model : 5
+TIME REQUIRED TO SAVE MODELS : 7.09755
+ model num trees in save model : 5
+TIME REQUIRED TO SAVE MODELS : 7.68562
+ model num trees in save model : 5
+TIME REQUIRED TO SAVE MODELS : 6.35079
+TIME REQUIRED TO READ MODELS : 14.5871
+ model num trees in read model : 5
+TIME REQUIRED TO READ MODELS : 13.2964
+ model num trees in read model : 5
+ first_model->trees : 5
+ treelite_handles[1]->trees : 5
+ concat model num trees : 10
+concat_model->num_feature : 20
+ concat_model->num_output_group : 1
+concat_model->random_forest_flag  : 1
+ model num trees in save model : 10
+TIME REQUIRED TO SAVE MODELS : 13.4827
+TIME REQUIRED TO READ MODELS : 14.9972
+ model num trees in read model : 5
+TIME REQUIRED TO READ MODELS : 31.296
+ model num trees in read model : 10
+ STORAGE TYPE IN fil c++ : 0
+TIME REQUIRED TO tl2fil_common : 1.35682
+TIME REQUIRED TO tree2fil_sparse : 0.896577
+TIME REQUIRED TO tree2fil_sparse : 0.267962
+TIME REQUIRED TO tree2fil_sparse : 0.185154
+TIME REQUIRED TO tree2fil_sparse : 0.354639
+TIME REQUIRED TO tree2fil_sparse : 0.187163
+TIME REQUIRED TO tree2fil_sparse : 0.18613
+TIME REQUIRED TO tree2fil_sparse : 0.187016
+TIME REQUIRED TO tree2fil_sparse : 0.525461
+TIME REQUIRED TO tree2fil_sparse : 0.185972
+TIME REQUIRED TO tree2fil_sparse : 0.311409
+ number of nodes in the tree : 44514552
+TIME REQUIRED TO tl2fil_sparse : 4.64472
+ NUMBER OF NODES : 44514552
+ NUMBER OF NODES : 44514552
+TIME REQUIRED TO BUILD FIL FROM TREELITE SPARSE : 6.09315
+#################################################
+#################################################
+TIME REQUIRED TO predict : 0.145474
+TIME REQUIRED TO READ MODELS : 28.2278
+ model num trees in read model : 10
+TIME REQUIRED TO READ MODELS : 30.1375
+ model num trees in read model : 10
+ STORAGE TYPE IN fil c++ : 0
+TIME REQUIRED TO tl2fil_common : 1.3646
+TIME REQUIRED TO tree2fil_sparse : 1.10218
+TIME REQUIRED TO tree2fil_sparse : 0.269465
+TIME REQUIRED TO tree2fil_sparse : 0.18627
+TIME REQUIRED TO tree2fil_sparse : 0.353574
+TIME REQUIRED TO tree2fil_sparse : 0.185134
+TIME REQUIRED TO tree2fil_sparse : 0.187709
+TIME REQUIRED TO tree2fil_sparse : 0.195288
+TIME REQUIRED TO tree2fil_sparse : 0.516327
+TIME REQUIRED TO tree2fil_sparse : 0.189875
+TIME REQUIRED TO tree2fil_sparse : 0.184714
+ number of nodes in the tree : 44514552
+TIME REQUIRED TO tl2fil_sparse : 4.7355
+ NUMBER OF NODES : 44514552
+ NUMBER OF NODES : 44514552
+TIME REQUIRED TO BUILD FIL FROM TREELITE SPARSE : 6.32091
+#################################################
+#################################################
+TIME REQUIRED TO predict : 0.145582
+TIME REQUIRED TO READ MODELS : 32.3843
+ model num trees in read model : 10
