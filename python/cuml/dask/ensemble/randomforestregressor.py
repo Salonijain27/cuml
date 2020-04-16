@@ -326,7 +326,6 @@ class RandomForestRegressor(DelayedPredictionMixin):
         to create a single model. The concatenated model is then converted to
         bytes format.
         """
-        start = timeit.default_timer()
         mod_bytes = []
         for w in self.workers:
             mod_bytes.append(self.rfs[w].result().model_pbuf_bytes)
@@ -340,8 +339,6 @@ class RandomForestRegressor(DelayedPredictionMixin):
             treelite_handle=all_tl_mod_handles)
 
         self.local_model = model
-        stop = timeit.default_timer()
-        print('Time in predict dask RF TO CALC TIME FOR CONCat_model : ', stop - start) 
 
     def fit(self, X, y):
         """
@@ -477,19 +474,13 @@ class RandomForestRegressor(DelayedPredictionMixin):
                            convert_dtype=True, fil_sparse_format='auto',
                            delayed=True):
         self._concat_treelite_models()
-        start = timeit.default_timer()
 
         data = DistributedDataHandler.single(X, client=self.client)
         self.datatype = data.datatype
-        stop = timeit.default_timer()
-        print(" TIME REQUIRED TO DISTRIBUT DATA IN PREDICT GPU : ", (stop-start))
-        start = timeit.default_timer()
         kwargs = {"convert_dtype": convert_dtype,
                   "predict_model": predict_model, "algo": algo,
                   "fil_sparse_format": fil_sparse_format}
         preds = self._predict(X, delayed=delayed, **kwargs)
-        stop = timeit.default_timer()
-        print(" TIME REQUIRED TO RUN PREDICT IN PREDICT GPU : ", (stop-start))
         return preds
 
     """

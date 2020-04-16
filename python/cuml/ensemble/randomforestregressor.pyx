@@ -391,21 +391,17 @@ class RandomForestRegressor(Base):
         return treelite_handle
 
     def _get_protobuf_bytes(self):
-        print(" ENTERED THE GET_PROTOBUF FUNC ")
-        if self.concat_handle:
-            fit_mod_ptr = self.concat_handle
         if self.concat_handle and len(self.concat_model_bytes) > 0:
-            print(" removing the extra step of reading and saving the model after predict")
             return self.concat_model_bytes
-        if self.concat_handle is None and self.treelite_handle:
+        elif self.concat_handle:
+            fit_mod_ptr = self.concat_handle
+        elif self.concat_handle is None and self.treelite_handle:
             if len(self.model_pbuf_bytes) > 0:
-                print(" return the tl model bytes without calling save model")
                 return self.model_pbuf_bytes
             else:
                 fit_mod_ptr = self.treelite_handle
         else:
             fit_mod_ptr = self._obtain_treelite_handle()
-        print(" RUNNING SAVE MODEL AFTER PASSING SELF.CONCAT INFO ")
         cdef uintptr_t model_ptr = <uintptr_t> fit_mod_ptr
         model_protobuf_bytes = save_model(<ModelHandle> model_ptr)
 
@@ -509,11 +505,8 @@ class RandomForestRegressor(Base):
 
         concat_model_ptr = <size_t> concat_model_handle
         self.concat_handle = ctypes.c_void_p(concat_model_ptr).value
-        print(" OBTAINED THE CONCAT MODEL HANDLE IN RFR PYX")
         cdef uintptr_t model_ptr = <uintptr_t> self.concat_handle
         self.concat_model_bytes = save_model(<ModelHandle> model_ptr)
-        #self.model_pbuf_bytes = self.concat_model_bytes
-        #print(" OBTAINED THE MODEL BYTES OF THE CONCAAT MODEL : ", len(self.concat_model_bytes))
 
     def fit(self, X, y, convert_dtype=False):
         """
@@ -623,7 +616,6 @@ class RandomForestRegressor(Base):
 
     def _predict_model_on_gpu(self, X, algo, convert_dtype,
                               fil_sparse_format):
-        start = timeit.default_timer()
         out_type = self._get_output_type(X)
         cdef ModelHandle cuml_model_ptr = NULL
         _, n_rows, n_cols, dtype = \
@@ -665,8 +657,6 @@ class RandomForestRegressor(Base):
 
         preds = tl_to_fil_model.predict(X, out_type)
         tl.free_treelite_model(treelite_handle)
-        stop = timeit.default_timer()
-        print(" TIME REQUIRED TO RUN PREDICT IN PREDICT GPU CYTHON: ", (stop-start))
         return preds
 
     def _predict_model_on_cpu(self, X, convert_dtype):
