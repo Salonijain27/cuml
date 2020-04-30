@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, NVIDIA CORPORATION.
+ * Copyright (c) 2019-2020, NVIDIA CORPORATION.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
+
+#include <cuml/common/logger.hpp>
 #include "bh_kernels.h"
 #include "utils.h"
 
@@ -23,25 +24,25 @@ namespace TSNE {
 
 /**
  * @brief Fast Dimensionality reduction via TSNE using the Barnes Hut O(NlogN) approximation.
- * @input param VAL: The values in the attractive forces COO matrix.
- * @input param COL: The column indices in the attractive forces COO matrix.
- * @input param ROW: The row indices in the attractive forces COO matrix.
- * @input param NNZ: The number of non zeros in the attractive forces COO matrix.
- * @input param handle: The GPU handle.
- * @output param Y: The final embedding. Will overwrite this internally.
- * @input param n: Number of rows in data X.
- * @input param epssq: A tiny jitter to promote numerical stability.
- * @input param early_exaggeration: How much early pressure you want the clusters in TSNE to spread out more.
- * @input param exaggeration_iter: How many iterations you want the early pressure to run for.
- * @input param min_gain: Rounds up small gradient updates.
- * @input param pre_learning_rate: The learning rate during the exaggeration phase.
- * @input param post_learning_rate: The learning rate after the exaggeration phase.
- * @input param max_iter: The maximum number of iterations TSNE should run for.
- * @input param min_grad_norm: The smallest gradient norm TSNE should terminate on.
- * @input param pre_momentum: The momentum used during the exaggeration phase.
- * @input param post_momentum: The momentum used after the exaggeration phase.
- * @input param random_state: Set this to -1 for pure random intializations or >= 0 for reproducible outputs.
- * @input param verbose: Whether to print error messages or not.
+ * @param[in] VAL: The values in the attractive forces COO matrix.
+ * @param[in] COL: The column indices in the attractive forces COO matrix.
+ * @param[in] ROW: The row indices in the attractive forces COO matrix.
+ * @param[in] NNZ: The number of non zeros in the attractive forces COO matrix.
+ * @param[in] handle: The GPU handle.
+ * @param[out] Y: The final embedding. Will overwrite this internally.
+ * @param[in] n: Number of rows in data X.
+ * @param[in] theta: repulsion threshold
+ * @param[in] epssq: A tiny jitter to promote numerical stability.
+ * @param[in] early_exaggeration: How much early pressure you want the clusters in TSNE to spread out more.
+ * @param[in] exaggeration_iter: How many iterations you want the early pressure to run for.
+ * @param[in] min_gain: Rounds up small gradient updates.
+ * @param[in] pre_learning_rate: The learning rate during the exaggeration phase.
+ * @param[in] post_learning_rate: The learning rate after the exaggeration phase.
+ * @param[in] max_iter: The maximum number of iterations TSNE should run for.
+ * @param[in] min_grad_norm: The smallest gradient norm TSNE should terminate on.
+ * @param[in] pre_momentum: The momentum used during the exaggeration phase.
+ * @param[in] post_momentum: The momentum used after the exaggeration phase.
+ * @param[in] random_state: Set this to -1 for pure random intializations or >= 0 for reproducible outputs.
  */
 void Barnes_Hut(float *VAL, const int *COL, const int *ROW, const int NNZ,
                 const cumlHandle &handle, float *Y, const int n,
@@ -52,38 +53,36 @@ void Barnes_Hut(float *VAL, const int *COL, const int *ROW, const int NNZ,
                 const float post_learning_rate = 500.0f,
                 const int max_iter = 1000, const float min_grad_norm = 1e-7,
                 const float pre_momentum = 0.5, const float post_momentum = 0.8,
-                const long long random_state = -1, const bool verbose = true) {
+                const long long random_state = -1) {
   auto d_alloc = handle.getDeviceAllocator();
   cudaStream_t stream = handle.getStream();
 
   // Get device properites
   //---------------------------------------------------
-  int blocks = MLCommon::getMultiProcessorCount();
+  const int blocks = MLCommon::getMultiProcessorCount();
 
   int nnodes = n * 2;
   if (nnodes < 1024 * blocks) nnodes = 1024 * blocks;
   while ((nnodes & (32 - 1)) != 0) nnodes++;
   nnodes--;
-  if (verbose) printf("N_nodes = %d blocks = %d\n", nnodes, blocks);
+  CUML_LOG_DEBUG("N_nodes = %d blocks = %d", nnodes, blocks);
 
   // Allocate more space
   //---------------------------------------------------
-  int *errl = (int *)d_alloc->allocate(sizeof(int), stream);
-  unsigned int *limiter =
-    (unsigned int *)d_alloc->allocate(sizeof(unsigned int), stream);
+  //int *errl = (int *)d_alloc->allocate(sizeof(int), stream);
+  unsigned *limiter = (unsigned *)d_alloc->allocate(sizeof(unsigned), stream);
   int *maxdepthd = (int *)d_alloc->allocate(sizeof(int), stream);
-  int *stepd = (int *)d_alloc->allocate(sizeof(int), stream);
   int *bottomd = (int *)d_alloc->allocate(sizeof(int), stream);
   float *radiusd = (float *)d_alloc->allocate(sizeof(float), stream);
 
-  TSNE::InitializationKernel<<<1, 1, 0, stream>>>(errl, limiter, maxdepthd,
-                                                  stepd, radiusd);
+  TSNE::InitializationKernel<<<1, 1, 0, stream>>>(/*errl,*/ limiter, maxdepthd,
+                                                  radiusd);
   CUDA_CHECK(cudaPeekAtLastError());
 
-  register const int FOUR_NNODES = 4 * nnodes;
-  register const int FOUR_N = 4 * n;
-  register const float theta_squared = theta * theta;
-  register const int NNODES = nnodes;
+  const int FOUR_NNODES = 4 * nnodes;
+  const int FOUR_N = 4 * n;
+  const float theta_squared = theta * theta;
+  const int NNODES = nnodes;
 
   // Actual mallocs
   int *startl = (int *)d_alloc->allocate(sizeof(int) * (nnodes + 1), stream);
@@ -134,7 +133,7 @@ void Barnes_Hut(float *VAL, const int *COL, const int *ROW, const int NNZ,
 
   float *YY =
     (float *)d_alloc->allocate(sizeof(float) * (nnodes + 1) * 2, stream);
-  random_vector(YY, -100.0f, 100.0f, (nnodes + 1) * 2, stream, random_state);
+  random_vector(YY, -0.0001f, 0.0001f, (nnodes + 1) * 2, stream, random_state);
   ASSERT(YY != NULL && rep_forces != NULL, "[ERROR] Possibly no more memory");
 
   // Set cache levels for faster algorithm execution
@@ -151,7 +150,7 @@ void Barnes_Hut(float *VAL, const int *COL, const int *ROW, const int NNZ,
 
   // Do gradient updates
   //---------------------------------------------------
-  if (verbose) printf("[Info] Start gradient updates!\n");
+  CUML_LOG_DEBUG("Start gradient updates!");
 
   float momentum = pre_momentum;
   float learning_rate = pre_learning_rate;
@@ -174,7 +173,7 @@ void Barnes_Hut(float *VAL, const int *COL, const int *ROW, const int NNZ,
     START_TIMER;
     TSNE::BoundingBoxKernel<<<blocks * FACTOR1, THREADS1, 0, stream>>>(
       startl, childl, massl, YY, YY + nnodes + 1, maxxl, maxyl, minxl, minyl,
-      FOUR_NNODES, NNODES, n, limiter, stepd, radiusd);
+      FOUR_NNODES, NNODES, n, limiter, radiusd);
     CUDA_CHECK(cudaPeekAtLastError());
 
     END_TIMER(BoundingBoxKernel_time);
@@ -188,7 +187,7 @@ void Barnes_Hut(float *VAL, const int *COL, const int *ROW, const int NNZ,
 
     START_TIMER;
     TSNE::TreeBuildingKernel<<<blocks * FACTOR2, THREADS2, 0, stream>>>(
-      errl, childl, YY, YY + nnodes + 1, NNODES, n, maxdepthd, bottomd,
+      /*errl,*/ childl, YY, YY + nnodes + 1, NNODES, n, maxdepthd, bottomd,
       radiusd);
     CUDA_CHECK(cudaPeekAtLastError());
 
@@ -217,15 +216,15 @@ void Barnes_Hut(float *VAL, const int *COL, const int *ROW, const int NNZ,
 
     START_TIMER;
     TSNE::RepulsionKernel<<<blocks * FACTOR5, THREADS5, 0, stream>>>(
-      errl, theta, epssq, sortl, childl, massl, YY, YY + nnodes + 1, rep_forces,
-      rep_forces + nnodes + 1, Z_norm, theta_squared, FOUR_NNODES, n,
-      radiusd_squared, maxdepthd, stepd);
+      /*errl,*/ theta, epssq, sortl, childl, massl, YY, YY + nnodes + 1,
+      rep_forces, rep_forces + nnodes + 1, Z_norm, theta_squared, NNODES,
+      FOUR_NNODES, n, radiusd_squared, maxdepthd);
     CUDA_CHECK(cudaPeekAtLastError());
 
     END_TIMER(RepulsionTime);
 
     START_TIMER;
-    TSNE::Find_Normalization<<<1, 1, 0, stream>>>(Z_norm, (float)n);
+    TSNE::Find_Normalization<<<1, 1, 0, stream>>>(Z_norm, n);
     CUDA_CHECK(cudaPeekAtLastError());
 
     END_TIMER(Reduction_time);
@@ -258,14 +257,16 @@ void Barnes_Hut(float *VAL, const int *COL, const int *ROW, const int NNZ,
   // Copy final YY into true output Y
   thrust::device_ptr<float> Y_begin = thrust::device_pointer_cast(Y);
   thrust::copy(thrust::cuda::par.on(stream), YY, YY + n, Y_begin);
+  CUDA_CHECK(cudaPeekAtLastError());
+
   thrust::copy(thrust::cuda::par.on(stream), YY + nnodes + 1,
                YY + nnodes + 1 + n, Y_begin + n);
+  CUDA_CHECK(cudaPeekAtLastError());
 
   // Deallocate everything
-  d_alloc->deallocate(errl, sizeof(int), stream);
-  d_alloc->deallocate(limiter, sizeof(unsigned int), stream);
+  //d_alloc->deallocate(errl, sizeof(int), stream);
+  d_alloc->deallocate(limiter, sizeof(unsigned), stream);
   d_alloc->deallocate(maxdepthd, sizeof(int), stream);
-  d_alloc->deallocate(stepd, sizeof(int), stream);
   d_alloc->deallocate(bottomd, sizeof(int), stream);
   d_alloc->deallocate(radiusd, sizeof(float), stream);
 

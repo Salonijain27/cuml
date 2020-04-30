@@ -13,49 +13,8 @@
 # limitations under the License.
 #
 
-from tornado import gen
 from dask.distributed import default_client
-from toolz import first
 import dask.dataframe as dd
-from collections import OrderedDict
-
-from dask.distributed import wait
-
-
-@gen.coroutine
-def extract_ddf_partitions(ddf):
-    """
-    Given a Dask cuDF, return an OrderedDict mapping
-    'worker -> [list of futures]' for each partition in ddf.
-
-    :param ddf: Dask.dataframe split dataframe partitions into a list of
-               futures.
-    """
-    client = default_client()
-
-    delayed_ddf = ddf.to_delayed()
-    parts = client.compute(delayed_ddf)
-    yield wait(parts)
-
-    key_to_part_dict = dict([(str(part.key), part) for part in parts])
-    who_has = yield client.who_has(parts)
-
-    worker_map = {}  # Map from part -> worker
-    for key, workers in who_has.items():
-        worker = first(workers)
-        worker_map[key_to_part_dict[key]] = worker
-
-    # Ensure that partitions in each list have the
-    # same order as the input 'parts' list
-    worker_to_parts = OrderedDict()
-    for part in parts:
-        worker = worker_map[part]
-        if worker not in worker_to_parts:
-            worker_to_parts[worker] = []
-        worker_to_parts[worker].append(part)
-
-    yield wait(worker_to_parts)
-    raise gen.Return(worker_to_parts)
 
 
 def get_meta(df):
@@ -68,14 +27,47 @@ def get_meta(df):
     return ret
 
 
-def to_dask_cudf(futures):
+def to_dask_cudf(futures, client=None, verbose=False):
     """
     Convert a list of futures containing cudf Dataframes into a Dask.Dataframe
     :param futures: list[cudf.Dataframe] list of futures containing dataframes
+    :param client: dask.distributed.Client Optional client to use
     :return: dask.Dataframe a dask.Dataframe
     """
-    c = default_client()
+    c = default_client() if client is None else client
     # Convert a list of futures containing dfs back into a dask_cudf
     dfs = [d for d in futures if d.type != type(None)]  # NOQA
-    meta = c.submit(get_meta, dfs[0]).result()
-    return dd.from_delayed(dfs, meta=meta)
+    if verbose:
+        print("to_dask_cudf dfs=%s" % str(dfs))
+    meta = c.submit(get_meta, dfs[0])
+    meta_local = meta.result()
+    return dd.from_delayed(dfs, meta=meta_local)
+
+
+def to_dask_df(dask_cudf, client=None):
+    """
+    Convert a Dask-cuDF into a Pandas-backed Dask Dataframe.
+    :param dask_cudf : dask_cudf.DataFrame
+    :param client: dask.distributed.Client Optional client to use
+    :return : dask.DataFrame
+    """
+
+    def to_pandas(df):
+        return df.to_pandas()
+
+    c = default_client() if client is None else client
+    delayed_ddf = dask_cudf.to_delayed()
+    gpu_futures = c.compute(delayed_ddf)
+
+    dfs = [c.submit(
+        to_pandas,
+        f,
+        pure=False) for idx, f in enumerate(gpu_futures)]
+
+    meta = c.submit(get_meta, dfs[0])
+
+    # Using new variabe for local result to stop race-condition in scheduler
+    # Ref: https://github.com/dask/dask/issues/6027
+    meta_local = meta.result()
+
+    return dd.from_delayed(dfs, meta=meta_local)

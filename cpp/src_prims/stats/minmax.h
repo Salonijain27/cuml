@@ -35,34 +35,34 @@ struct encode_traits<double> {
   using E = long long;
 };
 
-__host__ __device__ int encode(float val) {
+HDI int encode(float val) {
   int i = *(int*)&val;
   return i >= 0 ? i : (1 << 31) | ~i;
 }
 
-__host__ __device__ long long encode(double val) {
+HDI long long encode(double val) {
   long long i = *(long long*)&val;
   return i >= 0 ? i : (1ULL << 63) | ~i;
 }
 
-__host__ __device__ float decode(int val) {
+HDI float decode(int val) {
   if (val < 0) val = (1 << 31) | ~val;
   return *(float*)&val;
 }
 
-__host__ __device__ double decode(long long val) {
+HDI double decode(long long val) {
   if (val < 0) val = (1ULL << 63) | ~val;
   return *(double*)&val;
 }
 
 template <typename T, typename E>
-__device__ T atomicMaxBits(T* address, T val) {
+DI T atomicMaxBits(T* address, T val) {
   E old = atomicMax((E*)address, encode(val));
   return decode(old);
 }
 
 template <typename T, typename E>
-__device__ T atomicMinBits(T* address, T val) {
+DI T atomicMinBits(T* address, T val) {
   E old = atomicMin((E*)address, encode(val));
   return decode(old);
 }
@@ -165,10 +165,7 @@ __global__ void minmaxKernel(const T* data, const unsigned int* rowids,
  * @param globalmin final col-wise global minimum (size = ncols)
  * @param globalmax final col-wise global maximum (size = ncols)
  * @param sampledcols output sampled data. Pass nullptr if you don't need this
- * @param init_val initial minimum value to be
- * @param prop cuda device properties. This is being explicitly requested since
- * querying it inside prims is not good for perf.
- * @param stream: cuda stream
+ * @param stream cuda stream
  * @note This method makes the following assumptions:
  * 1. input and output matrices are assumed to be col-major
  * 2. ncols is small enough to fit the whole of min/max values across all cols

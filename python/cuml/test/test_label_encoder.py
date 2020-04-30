@@ -16,16 +16,16 @@ from cuml.preprocessing.LabelEncoder import LabelEncoder
 import cudf
 import numpy as np
 
-from cuml.test import utils
 import pytest
+from sklearn.exceptions import NotFittedError
 
 
 def _df_to_similarity_mat(df):
-    arr = utils.to_nparray(df).reshape(1, -1)
+    arr = df.to_array().reshape(1, -1)
     return np.pad(arr, [(arr.shape[1] - 1, 0), (0, 0)], "edge")
 
 
-@pytest.mark.parametrize("length", [10, 100, 1000])
+@pytest.mark.parametrize("length", [10, 1000])
 @pytest.mark.parametrize("cardinality", [5, 10, 50])
 def test_labelencoder_fit_transform(length, cardinality):
     """ Try encoding the entire df
@@ -75,7 +75,7 @@ def test_labelencoder_unfitted():
     le = LabelEncoder()
     assert not le._fitted
 
-    with pytest.raises(RuntimeError):
+    with pytest.raises(NotFittedError):
         le.transform(df)
 
 
@@ -121,7 +121,7 @@ def test_unfitted_inverse_transform():
     le = LabelEncoder()
     assert(not le._fitted)
 
-    with pytest.raises(RuntimeError):
+    with pytest.raises(NotFittedError):
         le.transform(df)
 
 

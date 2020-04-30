@@ -20,15 +20,17 @@
 # cython: language_level = 3
 
 from cuml.solvers import CD
+from cuml.metrics.base import RegressorMixin
+from cuml.common.base import Base
 
 
-class ElasticNet:
+class ElasticNet(Base, RegressorMixin):
 
     """
     ElasticNet extends LinearRegression with combined L1 and L2 regularizations
     on the coefficients when predicting response y with a linear combination of
     the predictors in X. It can reduce the variance of the predictors, force
-    some coefficients to be smaell, and improves the conditioning of the
+    some coefficients to be small, and improves the conditioning of the
     problem.
 
     cuML's ElasticNet an array-like object or cuDF DataFrame, uses coordinate
@@ -112,6 +114,8 @@ class ElasticNet:
         rather than looping over features sequentially by default.
         This (setting to ‘random’) often leads to significantly faster
         convergence especially when tol is higher than 1e-4.
+    handle : cuml.Handle
+        If it is None, a new one is created just for this class.
 
     Attributes
     -----------
@@ -126,7 +130,8 @@ class ElasticNet:
     """
 
     def __init__(self, alpha=1.0, l1_ratio=0.5, fit_intercept=True,
-                 normalize=False, max_iter=1000, tol=1e-3, selection='cyclic'):
+                 normalize=False, max_iter=1000, tol=1e-3, selection='cyclic',
+                 handle=None):
 
         """
         Initializes the elastic-net regression class.
@@ -144,6 +149,10 @@ class ElasticNet:
         For additional docs, see `scikitlearn's ElasticNet
         <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html>`_.
         """
+
+        # Hard-code verbosity as CoordinateDescent does not have verbosity
+        super(ElasticNet, self).__init__(handle=handle, verbose=0)
+
         self._check_alpha(alpha)
         self._check_l1_ratio(l1_ratio)
 
@@ -163,6 +172,15 @@ class ElasticNet:
             raise TypeError(msg.format(selection))
 
         self.intercept_value = 0.0
+
+        shuffle = False
+        if self.selection == 'random':
+            shuffle = True
+
+        self.cuElasticNet = CD(fit_intercept=self.fit_intercept,
+                               normalize=self.normalize, alpha=self.alpha,
+                               l1_ratio=self.l1_ratio, shuffle=shuffle,
+                               max_iter=self.max_iter, handle=self.handle)
 
     def _check_alpha(self, alpha):
         if alpha <= 0.0:
@@ -197,14 +215,6 @@ class ElasticNet:
 
         """
 
-        shuffle = False
-        if self.selection == 'random':
-            shuffle = True
-
-        self.cuElasticNet = CD(fit_intercept=self.fit_intercept,
-                               normalize=self.normalize, alpha=self.alpha,
-                               l1_ratio=self.l1_ratio, shuffle=shuffle,
-                               max_iter=self.max_iter)
         self.cuElasticNet.fit(X, y, convert_dtype=convert_dtype)
 
         self.coef_ = self.cuElasticNet.coef_
@@ -239,7 +249,7 @@ class ElasticNet:
 
     def get_params(self, deep=True):
         """
-        Sklearn style return parameter state
+        Scikit-learn style function that returns the estimator parameters.
 
         Parameters
         -----------

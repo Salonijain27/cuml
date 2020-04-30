@@ -43,6 +43,8 @@ class cumlCommunicator {
   enum datatype_t { CHAR, UINT8, INT, UINT, INT64, UINT64, FLOAT, DOUBLE };
   enum op_t { SUM, PROD, MIN, MAX };
 
+  static const int CUML_ANY_SOURCE = -1;
+
   /**
    * The resulting status of distributed stream synchronization
    */
@@ -104,7 +106,7 @@ class cumlCommunicator {
      * Starts a nonblocking send following the semantics of MPI_Isend
      *
      * @param[in]   buf     address of send buffer (can be a CPU or GPU pointer)
-     * @param[in]   n       size of the message to send in bytes
+     * @param[in]   size    size of the message to send in bytes
      * @param[in]   dest    rank of destination
      * @param[in]   tag     message tag
      * @param[out]  request communication request (handle)
@@ -115,7 +117,7 @@ class cumlCommunicator {
      * Starts a nonblocking receive following the semantics of MPI_Irecv
      *
      * @param[in]   buf     address of receive buffer (can be a CPU or GPU pointer)
-     * @param[in]   n       size of the message to receive in bytes
+     * @param[in]   size    size of the message to receive in bytes
      * @param[in]   source  rank of source
      * @param[in]   tag     message tag
      * @param[out]  request communication request (handle)
@@ -273,8 +275,8 @@ class cumlCommunicator {
      *                      datatype, root, nccl_comm, stream);
      *    }
      *
-     * @param[in]   sendbuff    address of GPU accessible send buffer
-     * @param[in]   recvbuff    address of GPU accessible receive buffer (might alias with sendbuff)
+     * @param[in]   sendbuf     address of GPU accessible send buffer
+     * @param[in]   recvbuf     address of GPU accessible receive buffer (might alias with sendbuff)
      * @param[in]   recvcounts  array (of length group size) containing the number of elements that are
      *                          received from each process.
      * @param[in]   displs      array (of length group size). Entry i specifies the displacement

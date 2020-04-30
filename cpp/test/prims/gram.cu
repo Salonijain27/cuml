@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, NVIDIA CORPORATION.
+ * Copyright (c) 2019-2020, NVIDIA CORPORATION.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  */
 
 #include <cuda_utils.h>
+#include <cuml/matrix/kernelparams.h>
 #include <gtest/gtest.h>
 #include <iostream>
 #include <memory>
 #include "common/cumlHandle.hpp"
 #include "common/device_buffer.hpp"
 #include "common/host_buffer.hpp"
-#include "gram/grammatrix.h"
-#include "gram/kernelfactory.h"
-#include "gram/kernelparams.h"
+#include "matrix/grammatrix.h"
+#include "matrix/kernelfactory.h"
 #include "test_utils.h"
 
 namespace MLCommon {
-namespace GramMatrix {
+namespace Matrix {
 
 class GramMatrixTest : public ::testing::Test {
  protected:
@@ -171,5 +171,5 @@ TEST_F(GramMatrixTest, RBF_Rectangular) {
   ASSERT_TRUE(
     devArrMatchHost(K, gram_dev, n1 * n2, CompareApprox<float>(1e-6f)));
 }
-};  // end namespace GramMatrix
+};  // end namespace Matrix
 };  // end namespace MLCommon

@@ -15,6 +15,11 @@
 #
 
 
+import numba
+
+from distutils.version import LooseVersion
+
+
 def has_dask():
     try:
         import dask   # NOQA
@@ -41,6 +46,14 @@ def has_ucp():
         return False
 
 
+def has_umap():
+    try:
+        import umap  # NOQA
+        return True
+    except ImportError:
+        return False
+
+
 def has_treelite():
     try:
         import treelite  # NOQA
@@ -60,6 +73,34 @@ def has_lightgbm():
 def has_xgboost():
     try:
         import xgboost  # NOQA
+        return True
+    except ImportError:
+        return False
+
+
+def has_pytest_benchmark():
+    try:
+        import pytest_benchmark  # NOQA
+        return True
+    except ImportError:
+        return False
+
+
+def check_min_numba_version(version):
+    return LooseVersion(str(numba.__version__)) >= LooseVersion(version)
+
+
+def check_min_cupy_version(version):
+    if has_cupy():
+        import cupy
+        return LooseVersion(str(cupy.__version__)) >= LooseVersion(version)
+    else:
+        return False
+
+
+def has_scipy():
+    try:
+        import scipy   # NOQA
         return True
     except ImportError:
         return False

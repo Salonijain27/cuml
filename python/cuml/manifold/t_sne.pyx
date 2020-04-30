@@ -18,7 +18,7 @@
 # distutils: language = c++
 # distutils: extra_compile_args = -Ofast
 # cython: embedsignature = True, language_level = 3
-# cython: boundscheck = False, wraparound = False, initializedcheck = False
+# cython: boundscheck = False, wraparound = False
 
 import cudf
 import cuml
@@ -31,8 +31,8 @@ import warnings
 from cuml.common.base import Base
 from cuml.common.handle cimport cumlHandle
 
-from cuml.utils import input_to_dev_array as to_cuda
-from numba import cuda
+from cuml.utils import input_to_dev_array
+import rmm
 
 from libcpp cimport bool
 from libc.stdint cimport uintptr_t
@@ -41,7 +41,7 @@ from libcpp.memory cimport shared_ptr
 cimport cuml.common.handle
 cimport cuml.common.cuda
 
-cdef extern from "tsne/tsne.h" namespace "ML" nogil:
+cdef extern from "cuml/manifold/tsne.h" namespace "ML" nogil:
     cdef void TSNE_fit(
         const cumlHandle &handle,
         const float *X,
@@ -65,7 +65,7 @@ cdef extern from "tsne/tsne.h" namespace "ML" nogil:
         const float pre_momentum,
         const float post_momentum,
         const long long random_state,
-        const bool verbose,
+        int verbosity,
         const bool intialize_embeddings,
         bool barnes_hut) except +
 
@@ -78,17 +78,14 @@ class TSNE(Base):
     dataset you give it, and is used in many areas including cancer research,
     music analysis and neural network weight visualizations.
 
-    The current cuML TSNE implementation is a first experimental release. It
-    defaults to use the 'exact' fitting algorithm, which is signficantly slower
-    then the Barnes-Hut algorithm as data sizes grow. A preview implementation
-    of Barnes-Hut (derived from CannyLabs' BH open source CUDA code) is also
-    available for problems with n_components = 2, though this implementation
-    currently has outstanding issues that can lead to crashes in rare
-    scenarios. Future releases of TSNE will fix these issues (tracked as cuML
-    Issue #1002) and switch Barnes-Hut to be the default.
+    Currently, cuML's TSNE supports the fast Barnes Hut O(NlogN) TSNE
+    approximation (derived from CannyLabs' BH open source CUDA code). This
+    allows TSNE to produce extremely fast embeddings when n_components = 2.
+    cuML defaults to this algorithm. A slower but more accurate Exact
+    algorithm is also provided.
 
     Parameters
-    ----------
+    -----------
     n_components : int (default 2)
         The output dimensionality size. Currently only size=2 is tested, but
         the 'exact' algorithm will support greater dimensionality in future.
@@ -101,7 +98,7 @@ class TSNE(Base):
         The learning rate usually between (10, 1000). If this is too high,
         TSNE could look like a cloud / ball of points.
     n_iter : int (default 1000)
-        The more epochs, the more stable/accruate the final embedding.
+        The more epochs, the more stable/accurate the final embedding.
     n_iter_without_progress : int (default 300)
         When the KL Divergence becomes too small after some iterations,
         terminate TSNE early.
@@ -110,20 +107,25 @@ class TSNE(Base):
     metric : str 'euclidean' only (default 'euclidean')
         Currently only supports euclidean distance. Will support cosine in
         a future release.
-    init : str 'random' only (default 'random')
-        Currently only supports random intialization. Will support PCA
-        intialization in a future release.
+    init : str 'random' (default 'random')
+        Currently supports random intialization.
     verbose : int (default 0)
         Level of verbosity. If > 0, prints all help messages and warnings.
+        Most messages will be printed inside the Python Console.
     random_state : int (default None)
-        Setting this can allow future runs of TSNE to look the same.
+        Setting this can allow future runs of TSNE to look mostly the same.
+        It is known that TSNE tends to have vastly different outputs on
+        many runs. Try using PCA intialization (upcoming with change #1098)
+        to possibly counteract this problem.
+        It is known that small perturbations can directly
+        change the result of the embedding for parallel TSNE implementations.
     method : str 'barnes_hut' or 'exact' (default 'barnes_hut')
-        Options are either barnes_hut or exact. It is recommend that you use
+        Options are either barnes_hut or exact. It is recommended that you use
         the barnes hut approximation for superior O(nlogn) complexity.
     angle : float (default 0.5)
         Tradeoff between accuracy and speed. Choose between (0,2 0.8) where
         closer to one indicates full accuracy but slower speeds.
-    learning_rate_method : str 'adaptive' or 'none' (default 'adaptive')
+    learning_rate_method : str 'adaptive', 'none' or None (default 'adaptive')
         Either adaptive or None. Uses a special adpative method that tunes
         the learning rate, early exaggeration and perplexity automatically
         based on input size.
@@ -133,21 +135,19 @@ class TSNE(Base):
         local structure, whilst larger values can improve global structure
         preservation. Default is 3 * 30 (perplexity)
     perplexity_max_iter : int (default 100)
-        The number of epochs the best guassian bands are found for.
+        The number of epochs the best gaussian bands are found for.
     exaggeration_iter : int (default 250)
         To promote the growth of clusters, set this higher.
     pre_momentum : float (default 0.5)
         During the exaggeration iteration, more forcefully apply gradients.
     post_momentum : float (default 0.8)
         During the late phases, less forcefully apply gradients.
-    should_downcast : bool (default True)
-        Whether to reduce to dataset to float32 or not.
     handle : (cuML Handle, default None)
-        You can pass in a past handle that was intialized, or we will create
+        You can pass in a past handle that was initialized, or we will create
         one for you anew!
 
     References
-    ----------
+    -----------
     *   van der Maaten, L.J.P.
         t-Distributed Stochastic Neighbor Embedding
         https://lvdmaaten.github.io/tsne/
@@ -163,11 +163,14 @@ class TSNE(Base):
     Tips
     -----
     Maaten and Linderman showcased how TSNE can be very sensitive to both the
-    starting conditions (ie random intialization), and how parallel versions
+    starting conditions (ie random initialization), and how parallel versions
     of TSNE can generate vastly different results. It has been suggested that
     you run TSNE a few times to settle on the best configuration. Notice
     specifying random_state and fixing it across runs can help, but TSNE does
     not guarantee similar results each time.
+
+    As suggested, PCA (upcoming with change #1098) can also help to alleviate
+    this issue.
 
     Reference Implementation
     -------------------------
@@ -190,15 +193,14 @@ class TSNE(Base):
                  str init='random',
                  int verbose=0,
                  random_state=None,
-                 str method='exact',
+                 str method='barnes_hut',
                  float angle=0.5,
-                 str learning_rate_method='None',
+                 learning_rate_method='adaptive',
                  int n_neighbors=90,
                  int perplexity_max_iter=100,
                  int exaggeration_iter=250,
                  float pre_momentum=0.5,
                  float post_momentum=0.8,
-                 bool should_downcast=True,
                  handle=None):
 
         super(TSNE, self).__init__(handle=handle, verbose=(verbose != 0))
@@ -287,30 +289,36 @@ class TSNE(Base):
         self.exaggeration_iter = exaggeration_iter
         self.pre_momentum = pre_momentum
         self.post_momentum = post_momentum
-        self.learning_rate_method = learning_rate_method
-
+        if learning_rate_method is None:
+            self.learning_rate_method = 'none'
+        else:
+            self.learning_rate_method = learning_rate_method.lower()
         self.epssq = 0.0025
         self.perplexity_tol = 1e-5
         self.min_gain = 0.01
         self.pre_learning_rate = learning_rate
         self.post_learning_rate = learning_rate * 2
 
-        self._should_downcast = should_downcast
-        self._assure_clean_memory()
-        return
+    @property
+    def Y(self):
+        warnings.warn("Attribute Y is deprecated and will be dropped in "
+                      "version 0.14, access the embeddings using the "
+                      "attribute ‘embedding_’ instead.",
+                      DeprecationWarning)
+        return self.embedding_
 
-    def fit(self, X):
+    def fit(self, X, convert_dtype=True):
         """Fit X into an embedded space.
+
         Parameters
-        ----------
+        -----------
         X : array-like (device or host) shape = (n_samples, n_features)
             X contains a sample per row.
             Acceptable formats: cuDF DataFrame, NumPy ndarray, Numba device
             ndarray, cuda array interface compliant array like CuPy
-        y : array-like (device or host) shape = (n_samples, 1)
-            y contains a label per row.
-            Acceptable formats: cuDF Series, NumPy ndarray, Numba device
-            ndarray, cuda array interface compliant array like CuPy
+        convert_dtype : bool, optional (default = True)
+            When set to True, the fit method will automatically
+            convert the inputs to np.float32.
         """
         cdef int n, p
         cdef cumlHandle* handle_ = <cumlHandle*><size_t>self.handle.getHandle()
@@ -321,12 +329,10 @@ class TSNE(Base):
             raise ValueError("data should be two dimensional")
 
         cdef uintptr_t X_ptr
-        if self._should_downcast:
-            _X, X_ptr, n, p, dtype = to_cuda(X, order='C',
-                                             convert_to_dtype=np.float32)
-        else:
-            _X, X_ptr, n, p, dtype = to_cuda(X, order='C',
-                                             check_dtype=np.float32)
+        _X, X_ptr, n, p, dtype = \
+            input_to_dev_array(X, order='C', check_dtype=np.float32,
+                               convert_to_dtype=(np.float32 if convert_dtype
+                                                 else None))
 
         if n <= 1:
             raise ValueError("There needs to be more than 1 sample to build "
@@ -339,7 +345,7 @@ class TSNE(Base):
             self.perplexity = n
 
         # Prepare output embeddings
-        Y = cuda.device_array(
+        Y = rmm.device_array(
             (n, self.n_components),
             order="F",
             dtype=np.float32)
@@ -349,7 +355,7 @@ class TSNE(Base):
         # Find best params if learning rate method is adaptive
         if self.learning_rate_method=='adaptive' and self.method=="barnes_hut":
             if self.verbose:
-                print("Learning rate is adpative. In TSNE paper, "
+                print("Learning rate is adaptive. In TSNE paper, "
                       "it has been shown that as n->inf, "
                       "Barnes Hut works well if n_neighbors->30, "
                       "learning_rate->20000, early_exaggeration->24.")
@@ -397,81 +403,64 @@ class TSNE(Base):
                  <float> self.pre_momentum,
                  <float> self.post_momentum,
                  <long long> seed,
-                 <bool> self.verbose,
+                 <int> self.logging_level,
                  <bool> True,
                  <bool> (self.method == 'barnes_hut'))
 
         # Clean up memory
         del _X
-        self._assure_clean_memory()
-        self.Y = Y
+        self.embedding_ = Y
         return self
 
     def __del__(self):
-        if "Y" in self.__dict__:
-            del self.Y
-            self.Y = None
-        self._assure_clean_memory()
+        if hasattr(self, 'embedding_'):
+            del self.embedding_
+            self.embedding_ = None
 
-    def fit_transform(self, X):
+    def fit_transform(self, X, convert_dtype=True):
         """Fit X into an embedded space and return that transformed output.
+
         Parameters
-        ----------
+        -----------
         X : array-like (device or host) shape = (n_samples, n_features)
             X contains a sample per row.
             Acceptable formats: cuDF DataFrame, NumPy ndarray, Numba device
             ndarray, cuda array interface compliant array like CuPy
+        convert_dtype : bool, optional (default = True)
+            When set to True, the fit_transform method will automatically
+            convert the inputs to np.float32.
+
         Returns
-        -------
+        --------
         X_new : array, shape (n_samples, n_components)
                 Embedding of the training data in low-dimensional space.
         """
-        self.fit(X)
+        self.fit(X, convert_dtype=convert_dtype)
 
         if isinstance(X, cudf.DataFrame):
-            if isinstance(self.Y, cudf.DataFrame):
-                self._assure_clean_memory()
-                return self.Y
+            if isinstance(self.embedding_, cudf.DataFrame):
+                return self.embedding_
             else:
-                data = cudf.DataFrame.from_gpu_matrix(self.Y)
-                self._assure_clean_memory()
-                return data
+                return cudf.DataFrame.from_gpu_matrix(self.embedding_)
         elif isinstance(X, np.ndarray):
-            data = self.Y.copy_to_host()
-            del self.Y
-            self._assure_clean_memory()
+            data = self.embedding_.copy_to_host()
+            del self.embedding_
             return data
         return None  # is this even possible?
 
     def __getstate__(self):
         state = self.__dict__.copy()
 
-        if "Y" in state:
-            state["Y"] = cudf.DataFrame.from_gpu_matrix(state["Y"])
+        if "embedding_" in state:
+            state["embedding_"] = cudf.DataFrame.from_gpu_matrix(
+                state["embedding_"])
 
         if "handle" in state:
             del state["handle"]
-        self._assure_clean_memory()
         return state
 
     def __setstate__(self, state):
         super(TSNE, self).__init__(handle=None,
                                    verbose=(state['verbose'] != 0))
         self.__dict__.update(state)
-        self._assure_clean_memory()
         return state
-
-    def _assure_clean_memory(self):
-        """
-        TSNE is sensitive to what is currently in memory.
-        Use Numba's garbabge collector to clean up already removed
-        GPU memory.
-        """
-        context = cuda.current_context().deallocations
-        if context is not None:
-            context.clear()
-        # Run again to be 100% sure all memory is freed.
-        # This is very very conservative.
-        context = cuda.current_context().deallocations
-        if context is not None:
-            context.clear()
