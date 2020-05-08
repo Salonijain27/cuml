@@ -103,30 +103,11 @@ def _mse(ytest, yhat):
 
 
 def dask_mse(ytest, yhat, client, workers):
-    print(" DASK MSE CALC FUNCTION ")
-    print(" TYPE OF YTEST :  ", type(ytest))
-    print(" TYPE OF Y HAT/ PREDS : ", type(yhat))
-    print(" TYPE OF Y HAT/ PREDS : ", type(yhat))
     ytest_parts = DistributedDataHandler.create(ytest, client=client)
-    print(" ytest_parts : ", ytest_parts.gpu_futures)
     yhat_parts = DistributedDataHandler.create(yhat, client=client)
-    print(" yhat_parts : ", yhat_parts.gpu_futures)
-    #mse_parts = np.asarray([client.submit(_mse, ytest_parts[i][1], yhat_parts[i][1]).result() for i in range(len(ytest_parts))])
-    #ytest_parts = client.sync(extract_arr_partitions, ytest, client)
-    #print(" GOT THE Y_TEST PARTS ")
-    #yhat_parts = client.sync(extract_arr_partitions, yhat, client)
-    print(" GOT THE PREDS PARTS ")
-    print(" CALLING THE INTERNAL _MSE FUNCTION ")
-    #print(r2_score(ytest, yhat))
     mse_parts = np.asarray([client.submit(_mse, ytest_parts.gpu_futures[i][1], yhat_parts.gpu_futures[i][1]).result() for i in range(len(ytest_parts))])
-    print(" CALC THE MSE OF EVERYTHING ")
     mse_parts[:, 0] = mse_parts[:, 0] * mse_parts[:, 1]
-    #print(ytest.result())
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    #return r2_score(ytest.result(), yhat.result())
-    #mse_parts[:, 0] = mse_parts[:, 0] * mse_parts[:, 1]
     return np.sum(mse_parts[:, 0]) / np.sum(mse_parts[:, 1])
-    #return 0
 
 def set_alloc():
     cp.cuda.set_allocator(rmm.rmm_cupy_allocator)
