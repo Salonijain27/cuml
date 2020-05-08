@@ -107,7 +107,7 @@ def dask_mse(ytest, yhat, client, workers):
     print(" TYPE OF YTEST :  ", type(ytest))
     print(" TYPE OF Y HAT/ PREDS : ", type(yhat))
     print(" TYPE OF Y HAT/ PREDS : ", type(yhat))
-    ytest_parts = DistributedDataHandler.create(y_test, client=client)
+    ytest_parts = DistributedDataHandler.create(ytest, client=client)
     print(" ytest_parts : ", ytest_parts.gpu_futures)
     yhat_parts = DistributedDataHandler.create(yhat, client=client)
     print(" yhat_parts : ", yhat_parts.gpu_futures)
@@ -154,10 +154,7 @@ def run_ideal_benchmark(n_workers, X_filepath, y_filepath, n_gb, n_features, dep
 
             n_samples = int(n_points / n_features)
             n_samples_per_gb = int(n_samples / n_gb)
-            # X, y = make_regression(n_samples=n_samples, n_features=n_features, n_informative=n_features / 10, n_parts=n_workers)
 
-            # X = X.rechunk((n_samples / n_workers, n_features))
-            # y = y.rechunk(n_samples / n_workers )
 
             X = read_data(client, X_filepath, n_workers, workers, n_samples, n_features, n_gb, n_samples_per_gb)
             print(X.compute_chunk_sizes().chunks)
